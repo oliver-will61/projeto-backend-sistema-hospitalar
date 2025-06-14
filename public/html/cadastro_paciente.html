@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <h1>Cadastro Paciente</h1>
+
+    <form action="http//localhost:3000/paciente-cadastro" method="POST">
+
+        <label for="input-nome-completo">Nome Completo</label>
+        <input id="input-nome-completo">
+
+        <label for="input-cpf">CPF</label>
+        <input id="input-cpf">
+
+        <label for="input-email">E-mail</label>
+        <input id="input-email">
+
+        <label for="input-senha">Senha</label>
+        <input id="input-senha">
+
+        <label for="input-reply-senha">Repita a senha</label>
+        <input id="input-reply-senha">
+
+        <label for="input-telefone">Telefone</label>
+        <input id="input-telefone">
+        
+        <label for="input-genero">Gênero</label>
+        <select class="input-genero">
+            <option value="" disabled selected>Selecione...</option>
+            <option value="masculino">Masculino</option>
+            <option value="feminino">Feminino</option>
+            <option value="outro">Outro</option>
+        </select>
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>

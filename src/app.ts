@@ -1,7 +1,12 @@
+// defini uma rota base
+
 import express from 'express';
 
-const app = express();
-app.use(express.json());
+// cria instância do express
+const app = express();  
+
+
+app.use(express.json()); 
 
 app.get('/', (req, res) => {
     res.send('Servidor Typescript rodando');
