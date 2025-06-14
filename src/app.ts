@@ -2,21 +2,22 @@
 
 import express from 'express';
 import path from 'path';
-import pacienteRota from './routes/pacienteRota'
 
+import pacienteRota from './routes/pacienteRota'
+import pagesRota from './routes/pagesRota'
 
 // cria instância do express
 const app = express();  
 
 
+// Middleware para arquivos estáticos (CSS, JS, imagens)
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json()); 
 
-app.get('/pgCadastroPaciente', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'html', 'cadastro_paciente.html'));
-});
 
-
-app.use('/', pacienteRota);
+app.use('/', pagesRota)
+app.use('/api', pacienteRota);
 
 
 
