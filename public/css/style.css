@@ -1,0 +1,19 @@
+@import url(reset.css);
+
+form {
+    margin: 0 0.5em;
+}
+
+form label {
+    display: block;
+    margin-top: 1em;
+}
+
+form input {
+    margin-top: 0.5em;
+}
+
+form button {
+    display: block;
+    margin-top: 1em;
+}
