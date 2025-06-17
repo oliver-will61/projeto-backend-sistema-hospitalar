@@ -19,7 +19,4 @@ export const cadastrarPaciente =  async (req: Request, res: Response) => {
             error:error
         });
     }
-   
-
-
 };
