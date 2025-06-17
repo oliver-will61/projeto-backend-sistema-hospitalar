@@ -6,6 +6,7 @@ function postCadastroPaciente() {
     const pacienteSenha = document.getElementById("input-senha")
     const pacienteTelefone = document.getElementById("input-telefone")
     const pacienteGenero = document.getElementById("select-genero")
+    const pacienteIdade = document.getElementById("input-idade");
 
     const paciente = {
         nome: pacienteNome.value,
@@ -13,6 +14,7 @@ function postCadastroPaciente() {
         email: pacienteEmail.value,
         senha: pacienteSenha.value,
         telefone: pacienteTelefone.value,
+        idade: pacienteIdade.value,
         genero: pacienteGenero.value
     }
 
