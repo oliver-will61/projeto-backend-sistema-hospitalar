@@ -5,41 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
     <h1>Cadastro Paciente</h1>
 
-    <form action="http://localhost:3000/api/cadastroPaciente" method="POST">
+    <form>
 
         <label for="input-nome-completo">Nome Completo</label>
-        <input id="input-nome-completo">
+        <input id="input-nome-completo" required>
 
         <label for="input-cpf">CPF</label>
-        <input id="input-cpf">
+        <input id="input-cpf" required>
 
         <label for="input-email">E-mail</label>
-        <input id="input-email">
+        <input id="input-email" required>
 
         <label for="input-senha">Senha</label>
-        <input id="input-senha">
+        <input id="input-senha" required>
 
         <label for="input-reply-senha">Repita a senha</label>
-        <input id="input-reply-senha">
+        <input id="input-reply-senha" required>
 
         <label for="input-telefone">Telefone</label>
         <input id="input-telefone">
         
         <label for="input-genero">Gênero</label>
-        <select class="input-genero">
+        <select class="input-genero" id="select-genero" required>
             <option value="" disabled selected>Selecione...</option>
             <option value="masculino">Masculino</option>
             <option value="feminino">Feminino</option>
             <option value="outro">Outro</option>
         </select>
 
-        <button type="submit">Enviar</button>
+        <button type="submit" onclick="postCadastroPaciente()">Enviar</button>
     </form>
+
+    <script src="script/cadastro-paciente.js"></script>
 </body>
 </html>

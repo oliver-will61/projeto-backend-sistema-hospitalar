@@ -11,7 +11,7 @@ const app = express();
 
 
 // Middleware para arquivos estáticos (CSS, JS, imagens)
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(express.json()); 
 
