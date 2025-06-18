@@ -7,12 +7,19 @@ export const cadastrarPaciente =  async (req: Request, res: Response) => {
     try {
         
         const {cpf, nome, email, senha, telefone, genero, idade} = req.body as Paciente
-        console.log(req.body);
-        console.log(cpf);
+        console.log(`Dados recebidos ${req.body}`);
+
+        const [resultado] = await db.execute (
+            'INSERT INTO pacientes (cpf, nome, email, senha, telefone, genero, idade) VALUES (?,?,?,?,?,?,?)',
+            [cpf,nome,email,senha,telefone,genero,idade]
+        )
         
+        console.log("Paciente cadastrado com sucesso!"); //resposta de sucesso (backend)
+
         return res.status(201).json({
-            message: 'Paciente cadastrado com sucesso!',
+            message: 'Paciente cadastrado com sucesso!', //resposta de sucesso (frontend)
         });  
+        
     } catch (error) {
         return res.status(500).json({
             message:"Erro ao cadastrar",

@@ -5,5 +5,5 @@ interface Usuario {
     senha: string;
     telefone: string;
     genero: string;
-    idade: string
+    idade: number
 }
