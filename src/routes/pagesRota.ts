@@ -8,4 +8,8 @@ router.get('/pgCadastroPaciente', (req, res) => {
     res.sendFile(path.join(__dirname, '..', '..', 'public', 'html', 'cadastro_paciente.html'));
 });
 
+router.get('/pglogin', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', 'public', 'html', 'login_paciente.html'))
+})
+
 export default router;
