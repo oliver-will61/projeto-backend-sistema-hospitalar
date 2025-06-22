@@ -29,11 +29,10 @@ async function postLoginPaciente(event) {
 
     const data = await response.json();
 
-    if (response.ok){
-        console.log(data.message)
+    if (data.usuarioLogado){
+        console.log('o usuario esta logado')
 
-        pacienteEmail.value = '' //deixa os campos dos inputs vázios
-        pacienteSenha.value = ''//deixa os campos dos inputs vázios
+        window.location.href="../html/paciente-pagina.html"
 
 
     } else {
