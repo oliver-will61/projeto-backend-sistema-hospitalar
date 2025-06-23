@@ -21,7 +21,7 @@ async function enviaDatabase(event) {
 
     console.log(historico)
 
-    // const response = await fetch('/api/paciente/historico', {
+    // const response = await fetch('/paciente/historico', {
     //     method:'POST',
     //     headers: {'Content-type': 'application/json'},
     //     body: JSON.stringify(historico)

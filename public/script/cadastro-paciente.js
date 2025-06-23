@@ -20,7 +20,7 @@ function postCadastroPaciente() {
 
     console.log(paciente);
 
-    fetch('/api/cadastroPaciente', {
+    fetch('/paciente/cadastroPaciente', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

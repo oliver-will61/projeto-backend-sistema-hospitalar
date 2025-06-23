@@ -17,7 +17,7 @@ app.use(express.json());
 
 
 app.use('/', pagesRota)
-app.use('/api', pacienteRota);
+app.use('/paciente', pacienteRota);
 
 
 
