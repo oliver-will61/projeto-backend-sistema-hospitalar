@@ -11,7 +11,26 @@
 
     <h1>Historico Clinico</h1>
 
-    <button>Adicionar Alergias e Doenças</button>
+    <button onclick="mostraFormulario()">Adicionar Alergias e Doenças</button>
+
+    <form id="form" style="display: none;">
+        <label>Alergias</label><br>
+        <input type="checkbox" name="alergias" value="Poeira">Poeira<br>
+        <input type="checkbox" name="alergias" value="Pólen"> Pólen<br>
+        <input type="checkbox" name="alergias" value="Lactose"> Lactose<br>
+        <input type="checkbox" name="alergias" value="Outros"> Outros<br><br>
+
+        <label>Doenças Crônicas</label><br>
+        <input type="checkbox" name="doencas" value="Diabetes"> Diabetes<br>
+        <input type="checkbox" name="doencas" value="Hipertensão"> Hipertensão<br>
+        <input type="checkbox" name="doencas" value="Asma"> Asma<br>
+        <input type="checkbox" name="doencas" value="Outra"> Outra<br><br>
+
+        <button>Enviar</button>
+
+    </form>
+
+    <script src="../script/historico-clinico.js"></script>
 
 </body>
 </html>
