@@ -1,6 +1,7 @@
 import express from 'express'
 import {cadastrarPaciente} from '../controllers/pacienteController'
 import {login} from '../controllers/loginController'
+import {historicoClinicoPaciente} from '../controllers/pacienteHistoricoController'
 
 const router = express.Router();
 
@@ -15,5 +16,8 @@ router.post('/cadastroPaciente', (req, res, next) => {
 
 router.post('/login', (req, res, next) => {
     login(req, res).catch(next)});
+
+router.post('/historico', (req, res, next) => {
+    historicoClinicoPaciente(req, res).catch(next)});
 
 export default router
