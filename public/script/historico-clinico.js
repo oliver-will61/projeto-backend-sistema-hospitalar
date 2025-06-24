@@ -1,30 +1,24 @@
+const form = document.getElementById("form")
+
+
 function mostraFormulario(){
-    const form = document.getElementById("form")
     form.style.display = 'block'
 }
 
 async function enviaDatabase(event) {
 
     event.preventDefault()
+
+    const formData = new FormData(form)
+
+    const alergia = formData.getAll('alergias')
+
+    const doenca = formData.getAll('doencas')
     
-    const alergias = [document.querySelectorAll('input[name="alergias"]:checked')]
-        .map(cb => cb.value);
-
-        console.log(alergias);
-        
-
-    const doencas = [document.querySelectorAll('input[name="doencas"]:checked')]
-    .map(cb => cb.value);
-
-    console.log(doencas);
-    
-
     const historico = {
-        alergias: alergias,
-        doencasCronicas: doencas
+        alergia: alergia,
+        doencaCronica: doenca
     };
-
-    console.log(historico)
 
     const response = await fetch('/paciente/historico', {
         method:'POST',
