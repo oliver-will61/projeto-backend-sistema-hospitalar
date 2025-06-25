@@ -9,19 +9,14 @@ export const historicoClinicoPaciente = async (req: Request, res: Response) => {
         const token = req.headers.authorization?.split(' ')[1];
         const dados = jwt.verify(token, process.env.JWT_SECRET)
 
-        console.log(dados)
-
         const  {alergia, doencaCronica} = req.body
-
-        console.log(req.body);
         
-
         const alergiaJson = JSON.stringify(alergia)
         const doencaCronicaJson = JSON.stringify(doencaCronica)        
 
         const [result] = await db.execute(
-            'INSERT INTO historico_clinico (alergia, doenca_cronica) VALUES (?,?)',
-            [alergiaJson, doencaCronicaJson]
+            'INSERT INTO historico_clinico (paciente_id, alergia, doenca_cronica) VALUES (?,?,?)',
+            [dados.id, alergiaJson, doencaCronicaJson]
         )
 
         console.log('Dados enviados para o banco');
