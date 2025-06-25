@@ -29,10 +29,13 @@ async function postLoginPaciente(event) {
 
     const data = await response.json();
 
+    console.log(data);
+    
+
     if (data.usuarioLogado){
         console.log('o usuario esta logado')
-
-        window.location.href="../html/paciente-pagina.html"
+        
+        //window.location.href="../html/paciente-pagina.html"
 
 
     } else {
