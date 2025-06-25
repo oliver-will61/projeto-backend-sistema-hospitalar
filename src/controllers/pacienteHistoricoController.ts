@@ -1,9 +1,15 @@
 import {Request, Response} from 'express';
 import {db} from '../config/database';
+import jwt from 'jsonwebtoken';
 
 export const historicoClinicoPaciente = async (req: Request, res: Response) => {
     
     try{
+        
+        const token = req.headers.authorization?.split(' ')[1];
+        const dados = jwt.verify(token, process.env.JWT_SECRET)
+
+        console.log(dados)
 
         const  {alergia, doencaCronica} = req.body
 
@@ -11,13 +17,7 @@ export const historicoClinicoPaciente = async (req: Request, res: Response) => {
         
 
         const alergiaJson = JSON.stringify(alergia)
-        const doencaCronicaJson = JSON.stringify(doencaCronica)
-
-
-        console.log(alergiaJson);
-        console.log(doencaCronicaJson);
-        
-        
+        const doencaCronicaJson = JSON.stringify(doencaCronica)        
 
         const [result] = await db.execute(
             'INSERT INTO historico_clinico (alergia, doenca_cronica) VALUES (?,?)',
