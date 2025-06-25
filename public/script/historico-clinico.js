@@ -9,6 +9,8 @@ async function enviaDatabase(event) {
 
     event.preventDefault()
 
+    const token = localStorage.getItem('token'); // recupe o token
+
     const formData = new FormData(form)
 
     const alergia = formData.getAll('alergias')
@@ -22,7 +24,10 @@ async function enviaDatabase(event) {
 
     const response = await fetch('/paciente/historico', {
         method:'POST',
-        headers: {'Content-type': 'application/json'},
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(historico)
     })
 
