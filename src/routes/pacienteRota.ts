@@ -1,5 +1,5 @@
 import express from 'express'
-import {cadastrarPaciente} from '../controllers/pacienteController'
+import {cadastrarPaciente} from '../controllers/cadastroController'
 import {login} from '../controllers/loginController'
 import {historicoClinicoPaciente} from '../controllers/pacienteHistoricoController'
 
