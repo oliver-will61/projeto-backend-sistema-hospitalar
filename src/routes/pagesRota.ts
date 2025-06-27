@@ -12,4 +12,8 @@ router.get('/pglogin', (req, res) => {
     res.sendFile(path.join(__dirname, '..', '..', 'public', 'html', 'login_paciente.html'))
 })
 
+router.get('/painel/root', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', 'public', 'html', 'root', 'painel.html'))
+})
+
 export default router;

@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.json()); 
 
 
-app.use('/', pagesRota)
+app.use('/page', pagesRota)
 app.use('/paciente', pacienteRota);
 
 
