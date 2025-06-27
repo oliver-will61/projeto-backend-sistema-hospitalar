@@ -10,6 +10,7 @@ app.use(express.json());
 
 
 router.post('/cadastro', (req, res, next) => {
+    
     cadastro(req, res).catch(next)});
 
 router.post('/login', (req, res, next) => {

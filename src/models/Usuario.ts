@@ -70,12 +70,14 @@ export class Usuario {
 
     static async cadastro(req: Request, res: Response, nomeTabela: String){
         try {
+
         
             const {cpf, nome, email, senha, telefone, genero, idade} = req.body as Usuario
 
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-            console.log(`Dados recebidos ${req.body}`);
+            console.log(JSON.stringify(req.body, null, 2));
+
 
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, idade) VALUES (?,?,?,?,?,?,?)`,

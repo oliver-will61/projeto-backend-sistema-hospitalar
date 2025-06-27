@@ -5,6 +5,7 @@ import path from 'path';
 
 import pacienteRota from './routes/pacienteRota'
 import pagesRota from './routes/pagesRota'
+import profissionalRota from './routes/profissionalRota'
 
 // cria instância do express
 const app = express();  
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/page', pagesRota)
 app.use('/paciente', pacienteRota);
+app.use('/profissional', profissionalRota)
 
 
 
