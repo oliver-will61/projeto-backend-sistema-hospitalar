@@ -1,36 +1,36 @@
-import {Request, Response} from 'express';
-import {db} from '../config/database';
-import jwt from 'jsonwebtoken';
+// import {Request, Response} from 'express';
+// import {db} from '../config/database';
+// import jwt from 'jsonwebtoken';
 
-export const historicoClinicoPaciente = async (req: Request, res: Response) => {
+// export const historicoClinicoPaciente = async (req: Request, res: Response) => {
     
-    try{
+//     try{
         
-        const token = req.headers.authorization?.split(' ')[1];
-        const dados = jwt.verify(token, process.env.JWT_SECRET)
+//         const token = req.headers.authorization?.split(' ')[1];
+//         const dados = jwt.verify(token, process.env.JWT_SECRET)
 
-        const  {alergia, doencaCronica} = req.body
+//         const  {alergia, doencaCronica} = req.body
         
-        const alergiaJson = JSON.stringify(alergia)
-        const doencaCronicaJson = JSON.stringify(doencaCronica)        
+//         const alergiaJson = JSON.stringify(alergia)
+//         const doencaCronicaJson = JSON.stringify(doencaCronica)        
 
-        const [result] = await db.execute(
-            'INSERT INTO historico_clinico (paciente_id, alergia, doenca_cronica) VALUES (?,?,?)',
-            [dados.id, alergiaJson, doencaCronicaJson]
-        )
+//         const [result] = await db.execute(
+//             'INSERT INTO historico_clinico (paciente_id, alergia, doenca_cronica) VALUES (?,?,?)',
+//             [dados.id, alergiaJson, doencaCronicaJson]
+//         )
 
-        console.log('Dados enviados para o banco');
+//         console.log('Dados enviados para o banco');
         
 
-        res.status(201).json({
-            sucesso: true,
-            mensage: 'Enviados com sucesso ao banco'
-        })
+//         res.status(201).json({
+//             sucesso: true,
+//             mensage: 'Enviados com sucesso ao banco'
+//         })
         
-    }
+//     }
 
-    catch(error) {
-        console.error('Erro no servidor:', error);
-        res.status(500).json({ success: false, error: 'Erro ao salvar histórico' });
-    }
-}
+//     catch(error) {
+//         console.error('Erro no servidor:', error);
+//         res.status(500).json({ success: false, error: 'Erro ao salvar histórico' });
+//     }
+// }
