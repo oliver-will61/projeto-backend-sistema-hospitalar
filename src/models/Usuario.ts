@@ -91,6 +91,7 @@ export class Usuario {
             });  
         
         } catch (error) {
+            console.error('Erro no login', error);
             return res.status(500).json({
                 message:"Erro ao cadastrar",
                 error:error
