@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import { Usuario } from "./Usuario";
 import {db} from '../config/database';
 import bcrypt from 'bcrypt';
-import {ProfissionalInput} from "../interfaces/ProfissionalInput" //interface
+import {ProfissionalInput} from "../interfaces/Medicoinput" //interface
 
 export class Profissional extends Usuario {
     constructor(

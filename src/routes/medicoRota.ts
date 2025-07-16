@@ -1,5 +1,5 @@
 import express from 'express'
-import {cadastro, login} from '../controllers/profissionalController';
+import {cadastro, login} from '../controllers/medicoController';
 
 const router = express.Router();
 const app = express()

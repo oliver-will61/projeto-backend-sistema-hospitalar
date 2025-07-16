@@ -1,4 +1,4 @@
-import { Profissional } from "../models/Profissional";
+import { Profissional } from "../models/Medico";
 import {Request, Response} from 'express';
 
 
