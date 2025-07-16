@@ -26,7 +26,11 @@ export class Profissional extends Usuario {
 
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-            console.log(`Dados recebidos ${req.body}`);
+            console.log(`Dados recebidos ${JSON.stringify(req.body)}`);
+
+            console.log(cpf, nome, email, senha, telefone, genero, idade, registroMedico, 
+                especialidade, admin);
+            
 
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, idade, registro_medico, especialidade, is_admin) VALUES (?,?,?,?,?,?,?,?,?,?)`,
@@ -40,6 +44,7 @@ export class Profissional extends Usuario {
             });  
         
         } catch (error) {
+            console.error(error)
             return res.status(500).json({
                 message:"Erro ao cadastrar",
                 error: (error as Error).message
