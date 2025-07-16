@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/page', pagesRota)
 app.use('/paciente', pacienteRota);
 app.use('/medico', medicoRota)
-app.use('/adm,', admRota)
+app.use('/adm', admRota)
 
 
 

@@ -9,5 +9,5 @@ export const cadastroAdm =  async (req: Request, res: Response) => {
 
 export const cadastroMedico =  async (req: Request, res: Response) => { 
     
-    Medico.cadastro(req, res, 'profissional');
+    Adm.cadastroMedico(req, res, 'profissional');
 };

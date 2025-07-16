@@ -6,7 +6,10 @@ const app = express()
 
 app.use(express.json());
 
-router.post('/cadastro', (req, res, next) => {
+router.post('/cadastroAdm', (req, res, next) => {
+    cadastroAdm(req, res).catch(next)});
+
+router.post('/cadastroMedico', (req, res, next) => {
     cadastroAdm(req, res).catch(next)});
 
 export default router
