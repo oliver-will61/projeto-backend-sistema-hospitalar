@@ -24,7 +24,8 @@ export class Usuario {
             try {
                 
                 const {email, senha} = req.body 
-        
+                
+                //busca usuario no banco
                 const [rows] = await db.execute(
                     `SELECT * FROM ${nomeTabela} WHERE email = ?`, [email])
         
@@ -36,6 +37,7 @@ export class Usuario {
                     });
                 }
                 
+                // verifica senha
                 const senhaValida = await bcrypt.compare(senha, usuario.senha);
         
                 if(!senhaValida) {
@@ -43,15 +45,21 @@ export class Usuario {
         
                     });
                 }
-        
+                
+                console.log(usuario.is_adm);
+                
+
                 const token = jwt.sign(
                     {
                         id: usuario.id, 
                         email: usuario.email, 
-                        usuario: usuario.nome
+                        usuario: usuario.nome,
+                        is_adm: usuario.is_adm
                     }, 
                     process.env.JWT_SECRET as string //pega a chave para validar o token
                 );
+
+                console.log(token)
         
                 return res.status(200).json({
                     message: 'Login realizado com sucesso!',
