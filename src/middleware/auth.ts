@@ -12,17 +12,16 @@ declare global {
     }
 }
 
-export const verificaToken = (req: Request, res: Response, next: NextFunction) => {
+export const verificaToken = (req: Request, res: Response, next: NextFunction): void => {
     const token = req.header('Authorization')?.split(' ')[1];
 
     if (!token) {
-        return res.status(401).json({
-            messagem: 'Token não fornecido'
-        })
+        res.status(401).json({messagem: "Token não fornecido"})
+        return 
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRETE!) as {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
             id: string,
             is_admin: boolean;
         };
@@ -31,8 +30,8 @@ export const verificaToken = (req: Request, res: Response, next: NextFunction) =
         next();
     } catch(error){
         console.error(error)
-        return res.status(401).json({
-            message: "Token inválido"
+        res.status(401).json({
+            messagem: "Token inválido"
         })
     }
 };

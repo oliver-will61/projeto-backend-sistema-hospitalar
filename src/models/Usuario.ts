@@ -46,9 +46,6 @@ export class Usuario {
                     });
                 }
                 
-                console.log(usuario.is_adm);
-                
-
                 const token = jwt.sign(
                     {
                         id: usuario.id, 
@@ -58,8 +55,6 @@ export class Usuario {
                     }, 
                     process.env.JWT_SECRET as string //pega a chave para validar o token
                 );
-
-                console.log(token)
         
                 return res.status(200).json({
                     message: 'Login realizado com sucesso!',
