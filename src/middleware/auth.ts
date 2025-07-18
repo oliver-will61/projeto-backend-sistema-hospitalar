@@ -6,7 +6,7 @@ declare global {
         interface Request {
             user?: {
                 id: string,
-                is_admin: boolean;
+                is_adm: boolean | number;
             };
         }
     }
@@ -23,7 +23,7 @@ export const verificaToken = (req: Request, res: Response, next: NextFunction): 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
             id: string,
-            is_admin: boolean;
+            is_adm: boolean;
         };
 
         req.user = decoded //add os dados do usuário à requisição
