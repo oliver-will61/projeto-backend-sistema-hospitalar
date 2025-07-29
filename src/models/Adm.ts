@@ -79,4 +79,8 @@ export class Adm extends Usuario {
             });
         }
     }
+
+    static async cadastroUnidade(req: Request, res: Response, nomeTabela: String) {
+        return
+    }
 }

@@ -1,5 +1,5 @@
 import express from 'express'
-import {login, cadastroAdm, cadastroMedico} from '../controllers/admController';
+import {login, cadastroAdm, cadastroMedico, controllerCadastroUnidade} from '../controllers/admController';
 import {verificaToken, isAdmin} from "../middleware"
 
 const router = express.Router();
@@ -23,5 +23,12 @@ router.post('/cadastroMedico',
         cadastroMedico(req, res).catch(next)
     }
 );
+
+router.post('/cadastroUnidadeHospitalar',
+    verificaToken,
+    isAdmin,
+    (req, res, next) => {
+        controllerCadastroUnidade(req, res).catch(next)
+})
 
 export default router
