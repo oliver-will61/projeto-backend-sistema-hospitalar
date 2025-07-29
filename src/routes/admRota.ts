@@ -24,7 +24,7 @@ router.post('/cadastroMedico',
     }
 );
 
-router.post('/cadastroUnidadeHospitalar',
+router.post('/cadastroUnidade',
     verificaToken,
     isAdmin,
     (req, res, next) => {

@@ -4,6 +4,7 @@ import {db} from '../config/database';
 import bcrypt from 'bcrypt';
 import {MedicoInput} from "../interfaces/MedicoInput" //interface
 import {AdmInput} from "../interfaces/AdmInput" //interface
+import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
 
 export class Adm extends Usuario {
     constructor(
@@ -81,6 +82,12 @@ export class Adm extends Usuario {
     }
 
     static async cadastroUnidade(req: Request, res: Response, nomeTabela: String) {
-        return
+        
+        try {
+            const {
+                cnpjUnidade, ruaUnidade, numeroUnidade, bairroUnidade, estadoUnidade, cepUnidade
+            } = req.body as UnidadeHospitalarInput
+        }
+
     }
 }
