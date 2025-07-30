@@ -52,6 +52,7 @@ export class Adm extends Usuario {
         
             const {cpf, nome, email, senha, telefone, genero, idade, registroMedico, 
                 especialidade, admin} = req.body as MedicoInput
+                
 
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
@@ -85,6 +86,8 @@ export class Adm extends Usuario {
             const {
                 cnpjUnidade, ruaUnidade, numeroUnidade, bairroUnidade, estadoUnidade, cepUnidade
             } = req.body as UnidadeHospitalarInput
+
+            console.log(JSON.stringify(req.body.numeroUnidade));
 
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (cnpj, nome_rua, numero_rua, bairro, estado, cep) VALUES (?,?,?,?,?,?)`,
