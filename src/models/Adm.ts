@@ -55,8 +55,6 @@ export class Adm extends Usuario {
 
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-            console.log(`Dados recebidos ${JSON.stringify(req.body)}`);
-
             // console.log(cpf, nome, email, senha, telefone, genero, idade, registroMedico, 
             //     especialidade, admin);
             
@@ -87,7 +85,23 @@ export class Adm extends Usuario {
             const {
                 cnpjUnidade, ruaUnidade, numeroUnidade, bairroUnidade, estadoUnidade, cepUnidade
             } = req.body as UnidadeHospitalarInput
-        }
 
+            const [resultado] = await db.execute (
+                `INSERT INTO ${nomeTabela} (cnpj, nome_rua, numero_rua, bairro, estado, cep) VALUES (?,?,?,?,?,?)`,
+                [cnpjUnidade, ruaUnidade, numeroUnidade, bairroUnidade, estadoUnidade, cepUnidade]
+            )
+
+            console.log("Unidade cadastrada com sucesso")
+
+            return res.status(201).json({
+                message: "Unidade cadastrada com sucesso"
+            });
+        } catch(error) {
+            console.error(error)
+            return res.status(500).json({
+                message: "Erro ao cadastra a unidade",
+                error: (error as Error).message
+            })
+        }
     }
 }
