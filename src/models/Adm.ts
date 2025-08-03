@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import {MedicoInput} from "../interfaces/MedicoInput" //interface
 import {AdmInput} from "../interfaces/AdmInput" //interface
 import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
+import { UnidadeHospitalarDb } from '../interfaces/unidadeHospitalar_db'
 
 export class Adm extends Usuario {
     constructor(
@@ -51,18 +52,29 @@ export class Adm extends Usuario {
         try {
         
             const {cpf, nome, email, senha, telefone, genero, idade, registroMedico, 
-                especialidade, admin} = req.body as MedicoInput
+                especialidade, admin, nomeUnidadeHospitalar} = req.body as MedicoInput
                 
 
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-            // console.log(cpf, nome, email, senha, telefone, genero, idade, registroMedico, 
-            //     especialidade, admin);
+            const [unidades] = await db.execute<UnidadeHospitalarDb[]>(
+                `SELECT  id FROM unidade_hospitalar WHERE nome = ?`,
+                [nomeUnidadeHospitalar]
+            );
+
+            if (!unidades || unidades.length === 0) {
+                throw new Error ("Unidade hospitalar não encontrada!")
+            }
+
+            const idUnidadeHospitalar = unidades[0].id
+
+            console.log(idUnidadeHospitalar);
             
 
+            
             const [resultado] = await db.execute (
-                `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, idade, registro_medico, especialidade, is_admin) VALUES (?,?,?,?,?,?,?,?,?,?)`,
-                [cpf,nome,email,senhaCriptografada,telefone,genero,idade, registroMedico, especialidade, admin]
+                `INSERT INTO ${nomeTabela} (id_unidade_hospitalar, cpf, nome, email, senha, telefone, genero, idade, registro_medico, especialidade, is_admin) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+                [idUnidadeHospitalar, cpf,nome,email,senhaCriptografada,telefone,genero,idade, registroMedico, especialidade, admin]
             )
             
             console.log("Medico cadastrado com sucesso!"); //resposta de sucesso (backend)
@@ -84,14 +96,14 @@ export class Adm extends Usuario {
         
         try {
             const {
-                cnpjUnidade, ruaUnidade, numeroUnidade, bairroUnidade, estadoUnidade, cepUnidade
+                nome, cnpj, endereco, numeroEndereco, bairro, estado, cep
             } = req.body as UnidadeHospitalarInput
 
             console.log(JSON.stringify(req.body.numeroUnidade));
 
             const [resultado] = await db.execute (
-                `INSERT INTO ${nomeTabela} (cnpj, nome_rua, numero_rua, bairro, estado, cep) VALUES (?,?,?,?,?,?)`,
-                [cnpjUnidade, ruaUnidade, numeroUnidade, bairroUnidade, estadoUnidade, cepUnidade]
+                `INSERT INTO ${nomeTabela} (nome, cnpj, endereco, numero_endereco, bairro, estado, cep) VALUES (?,?,?,?,?,?,?)`,
+                [nome, cnpj, endereco, numeroEndereco, bairro, estado, cep]
             )
 
             console.log("Unidade cadastrada com sucesso")
