@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import {MedicoInput} from "../interfaces/MedicoInput" //interface
 import {AdmInput} from "../interfaces/AdmInput" //interface
 import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
-import { UnidadeHospitalarDb } from '../interfaces/unidadeHospitalar_db'
+import { UnidadeMedica } from './UnidadeMedica';
 
 export class Adm extends Usuario {
     constructor(
@@ -57,20 +57,10 @@ export class Adm extends Usuario {
 
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
-            const [unidades] = await db.execute<UnidadeHospitalarDb[]>(
-                `SELECT  id FROM unidade_hospitalar WHERE nome = ?`,
-                [nomeUnidadeHospitalar]
-            );
+            //converte o nome da unidade medica para id
+            const idUnidadeHospitalar = await UnidadeMedica.getID(nomeUnidadeHospitalar as string) 
 
-            if (!unidades || unidades.length === 0) {
-                throw new Error ("Unidade hospitalar não encontrada!")
-            }
-
-            const idUnidadeHospitalar = unidades[0].id
-
-            console.log(idUnidadeHospitalar);
-            
-
+            console.log(`ID da unidade hospitalar: ${idUnidadeHospitalar}`);
             
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (id_unidade_hospitalar, cpf, nome, email, senha, telefone, genero, idade, registro_medico, especialidade, is_admin) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
