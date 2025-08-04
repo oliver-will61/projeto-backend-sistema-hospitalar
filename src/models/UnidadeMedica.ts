@@ -1,7 +1,7 @@
 import {db} from '../config/database';
 import { UnidadeHospitalarDb } from '../interfaces/unidadeHospitalar_db'
 
-export class UnidadeMedica {
+export class UnidadeHospitalar {
 
     constructor (public nome: string){
     }

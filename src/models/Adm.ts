@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import {MedicoInput} from "../interfaces/MedicoInput" //interface
 import {AdmInput} from "../interfaces/AdmInput" //interface
 import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
-import { UnidadeMedica } from './UnidadeMedica';
+import { UnidadeHospitalar } from './UnidadeMedica';
 
 export class Adm extends Usuario {
     constructor(
@@ -22,15 +22,15 @@ export class Adm extends Usuario {
 
     static async cadastroAdm(req: Request, res: Response, nomeTabela: String) {
         try {
-            const {cpf, nome, email, senha, telefone, genero, cargo, idade, is_adm} = req.body as AdmInput
+            const {nomeUnidadeHospitalar, cpf, nome, email, senha, telefone, genero, cargo, idade, is_adm} = req.body as AdmInput
 
             const senhaCriptografada = await bcrypt.hash(senha, 10)
 
-            console.log(`Dados recebidos ${JSON.stringify(req.body)}`);
+            const idUnidadeHospitalar = await UnidadeHospitalar.getID(nomeUnidadeHospitalar as string)
 
             const [resultado] = await db.execute (
-                `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, cargo, idade, is_adm) VALUE (?,?,?,?,?,?,?,?,?)`,
-                 [cpf, nome, email, senhaCriptografada, telefone, genero, cargo, idade, is_adm] 
+                `INSERT INTO ${nomeTabela} (id_unidade_hospitalar, cpf, nome, email, senha, telefone, genero, cargo, idade, is_adm) VALUE (?,?,?,?,?,?,?,?,?,?)`,
+                 [idUnidadeHospitalar, cpf, nome, email, senhaCriptografada, telefone, genero, cargo, idade, is_adm] 
             )
 
             console.log("Administrador cadastrado com sucesso!");
@@ -58,7 +58,7 @@ export class Adm extends Usuario {
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
             //converte o nome da unidade medica para id
-            const idUnidadeHospitalar = await UnidadeMedica.getID(nomeUnidadeHospitalar as string) 
+            const idUnidadeHospitalar = await UnidadeHospitalar.getID(nomeUnidadeHospitalar as string) 
 
             console.log(`ID da unidade hospitalar: ${idUnidadeHospitalar}`);
             
