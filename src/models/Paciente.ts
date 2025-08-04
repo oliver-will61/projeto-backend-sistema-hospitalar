@@ -1,4 +1,8 @@
-export class Paciente extends Usuario {
+export class Paciente  {
 
-    
+
+    marcarConsulta() {
+        const {emailPaciente, emailMedico, unidadeHospitalar, dia, hora, telemedicina, status, diagnostico}
+    }
 }
+
