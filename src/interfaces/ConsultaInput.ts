@@ -2,8 +2,7 @@ export interface ConsultaInput{
     emailPaciente: string, 
     emailMedico: string,
     unidadeHospitalar: string,
-    dia:Date
-    hora: number,
+    data:Date
     telemedicina: boolean,
     status: string
     diagnostico: string

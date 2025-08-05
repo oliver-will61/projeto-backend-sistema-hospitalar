@@ -2,6 +2,7 @@ import {Request, Response} from 'express';
 import {db} from '../config/database';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { UsuarioDb } from '../interfaces/UsuarioDb';
 
 
 export class Usuario {
@@ -19,6 +20,18 @@ export class Usuario {
         this.idade = idade; 
     }
 
+    static async getId (emailUsuario: string, nomeTabela: String): Promise<number> {
+        const [row] = await db.execute<UsuarioDb[]>(
+            `SELECT id FROM ${nomeTabela} WHERE email = ?`,
+            [emailUsuario]
+        )
+
+        if (!row || row.length === 0) {
+            throw new Error ("email não encontrado")
+        }
+
+        return row[0].id
+    }
 
     static async login(req: Request, res: Response, nomeTabela: String) {
             try {
