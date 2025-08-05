@@ -26,7 +26,7 @@ export class Adm extends Usuario {
 
             const senhaCriptografada = await bcrypt.hash(senha, 10)
 
-            const idUnidadeHospitalar = await UnidadeHospitalar.getID(nomeUnidadeHospitalar as string)
+            const idUnidadeHospitalar = await UnidadeHospitalar.getId(nomeUnidadeHospitalar as string)
 
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (id_unidade_hospitalar, cpf, nome, email, senha, telefone, genero, cargo, idade, is_adm) VALUE (?,?,?,?,?,?,?,?,?,?)`,
@@ -58,9 +58,7 @@ export class Adm extends Usuario {
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
             //converte o nome da unidade medica para id
-            const idUnidadeHospitalar = await UnidadeHospitalar.getID(nomeUnidadeHospitalar as string) 
-
-            console.log(`ID da unidade hospitalar: ${idUnidadeHospitalar}`);
+            const idUnidadeHospitalar = await UnidadeHospitalar.getId(nomeUnidadeHospitalar as string) 
             
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (id_unidade_hospitalar, cpf, nome, email, senha, telefone, genero, idade, registro_medico, especialidade, is_admin) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,

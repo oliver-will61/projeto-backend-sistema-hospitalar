@@ -6,7 +6,7 @@ export class UnidadeHospitalar {
     constructor (public nome: string){
     }
 
-    static async getID(nomeUnidadeHospitalar: string): Promise<number> {
+    static async getId(nomeUnidadeHospitalar: string): Promise<number> {
         const [unidades] = await db.execute<UnidadeHospitalarDb[]>(
             `SELECT  id FROM unidade_hospitalar WHERE nome = ?`,
             [nomeUnidadeHospitalar]
