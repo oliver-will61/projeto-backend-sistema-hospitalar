@@ -8,7 +8,7 @@ import { db } from "../config/database";
 export class Paciente extends Usuario {
 
 
-    async marcarConsulta(req:Request, res: Response) {
+    static async marcarConsulta(req:Request, res: Response) {
 
         const nomeTabelaConsulta = "consultas" 
 

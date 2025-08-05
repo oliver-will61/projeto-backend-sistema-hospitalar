@@ -1,5 +1,6 @@
 import {Usuario} from '../models/Usuario';
 import {Request, Response} from 'express';
+import { Paciente } from '../models/Paciente';
 
 
 export const login =  async (req: Request, res: Response) => {
@@ -9,3 +10,7 @@ export const login =  async (req: Request, res: Response) => {
 export const cadastro =  async (req: Request, res: Response) => {
     Usuario.cadastro(req, res, 'pacientes');
 };
+
+export const marcarConsultaController = async(req: Request, res: Response) => {
+    Paciente.marcarConsulta(req, res)
+}
