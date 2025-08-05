@@ -16,13 +16,15 @@ export class Paciente extends Usuario {
             const {emailPaciente, emailMedico, unidadeHospitalar, data, telemedicina, 
                 status, diagnostico} = req.body as ConsultaInput
 
-            const idPaciente = Paciente.getId(emailPaciente, "pacientes") 
-            const idMedico = Medico.getId(emailMedico, "profissional")
-            const idUnidadeHospitalar = UnidadeHospitalar.getId(unidadeHospitalar)
+            const idPaciente = await Paciente.getId(emailPaciente, "pacientes") 
+            const idMedico = await Medico.getId(emailMedico, "profissional")
+            const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)
+
+            console.log(idPaciente, idMedico, idUnidadeHospitalar)
 
             const [resultado] = await db.execute(
-                `INSERT INTO ${nomeTabelaConsulta} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status, diagnostico) VALUES (?,?,?,?,?,?,?)`,
-                [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status, diagnostico]
+                `INSERT INTO ${nomeTabelaConsulta} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status) VALUES (?,?,?,?,?,?)`,
+                [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status]
             )
 
             console.log("Consulta realizada com sucesso!");
