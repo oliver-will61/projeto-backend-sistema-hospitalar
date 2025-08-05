@@ -17,7 +17,7 @@ export class Paciente extends Usuario {
                 status, diagnostico} = req.body as ConsultaInput
 
             const idPaciente = Paciente.getId(emailPaciente, "pacientes") 
-            const idMedico = Medico.getId(emailMedico, "Profissional")
+            const idMedico = Medico.getId(emailMedico, "profissional")
             const idUnidadeHospitalar = UnidadeHospitalar.getId(unidadeHospitalar)
 
             const [resultado] = await db.execute(

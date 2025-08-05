@@ -14,6 +14,7 @@ export class UnidadeHospitalar {
 
         if (!unidades || unidades.length === 0) {
             throw new Error ("Unidade hospitalar não encontrada!")
+            
         }
 
         return unidades[0].id
