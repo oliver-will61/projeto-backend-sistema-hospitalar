@@ -31,7 +31,7 @@ export class Paciente extends Usuario {
                 message: "Consulta Realizada com Sucesso!"
             });
 
-        } catch (errror){
+        } catch (error){
             console.error()
             return res.json({
                 message: "Erro ao marca a consulta, verifique se o email do medico/paciente ou a unidade hospitalar estão corretos"
