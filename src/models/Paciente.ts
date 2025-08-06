@@ -21,6 +21,9 @@ export class Paciente extends Usuario {
 
             //pega o id do paciente usando como parametro o email
             const idPaciente = await Paciente.getId(emailPaciente, "pacientes") 
+
+            //pega o id unidade hospitalar usadno como parametro o nome da unidade
+            const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)
             
             let statusVar = status
             if (statusVar != "agendado") {
@@ -33,7 +36,7 @@ export class Paciente extends Usuario {
                 [idMedico, status, data]
             )
 
-            console.log(row);
+            //console.log(row);
             
 
             if (row.length > 0) {                
@@ -49,9 +52,6 @@ export class Paciente extends Usuario {
             //     }
              }
         
-
-            //pega o id unidade hospitalar usadno como parametro o nome da unidade
-            const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)
 
             //marca a consulta no banco de dados
             const [resultado] = await db.execute(
