@@ -8,7 +8,7 @@ export class UnidadeHospitalar {
 
     static async getId(nomeUnidadeHospitalar: string): Promise<number> {
         const [unidades] = await db.execute<UnidadeHospitalarDb[]>(
-            `SELECT  id FROM unidade_hospitalar WHERE nome = ?`,
+            `SELECT id FROM unidade_hospitalar WHERE nome = ?`,
             [nomeUnidadeHospitalar]
         );
 
