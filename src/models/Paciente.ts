@@ -1,12 +1,13 @@
 import {ConsultaInput} from "../interfaces/ConsultaInput"
+import { ConsultaDb } from "../interfaces/ConsultaDb";
 import { Request, Response } from "express";
 import { Usuario } from "./Usuario";
 import { Medico } from "./Medico";
 import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
 
-export class Paciente extends Usuario {
 
+export class Paciente extends Usuario {
 
     static async marcarConsulta(req:Request, res: Response) {
 
@@ -31,25 +32,13 @@ export class Paciente extends Usuario {
             }
 
             // trás as consultas do paciente que tem como status "agendado"
-            const [row] = await db.execute(
+            const [row] = await db.execute<ConsultaDb[]>(
                 `SELECT data, id_medico, status FROM ${nomeTabelaConsulta} WHERE id_medico = ? AND status = ? AND data = ?` ,
                 [idMedico, status, data]
             )
 
-            //console.log(row);
-            
-
             if (row.length > 0) {                
-
-                // talvez a parte de baixo nem seja necessário
-                // converte a data do input e do banco de dados em timestamp para facilitar a comparação das duas datas
-            //     const dataInputTimestamp = new Date(data).getTime()
-            //     const dataBancoTimestamp = new Date(row[0].data).getTime()
-                
-            //     //vefifica se já não existe um agendamento para a mesma data
-            //     if (dataBancoTimestamp == dataInputTimestamp) {
                     throw new Error ("Já existe um consulta marcada para o horario escolhido!")
-            //     }
              }
         
 
