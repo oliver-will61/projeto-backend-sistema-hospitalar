@@ -1,5 +1,5 @@
 import {db} from '../config/database';
-import { UnidadeHospitalarDb } from '../interfaces/unidadeHospitalar_db'
+import { RowDataPacket } from "mysql2";
 
 export class UnidadeHospitalar {
 
@@ -7,7 +7,7 @@ export class UnidadeHospitalar {
     }
 
     static async getId(nomeUnidadeHospitalar: string): Promise<number> {
-        const [unidades] = await db.execute<UnidadeHospitalarDb[]>(
+        const [unidades] = await db.execute<RowDataPacket[]>(
             `SELECT id FROM unidade_hospitalar WHERE nome = ?`,
             [nomeUnidadeHospitalar]
         );

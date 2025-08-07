@@ -1,8 +1,4 @@
-import {Request, Response} from 'express';
 import { Usuario } from "./Usuario";
-import {db} from '../config/database';
-import bcrypt from 'bcrypt';
-import {MedicoInput} from "../interfaces/MedicoInput" //interface
 
 export class Medico extends Usuario {
     constructor(
