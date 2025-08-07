@@ -4,9 +4,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 
-
 export class Usuario {
 
+    static nomeTabela = ""
+    
     constructor(
         public cpf: string, public nome: string, public email: string, public senha: string, public telefone: string, 
         public genero: string, public idade: number) 
@@ -20,7 +21,7 @@ export class Usuario {
         this.idade = idade; 
     }
 
-    static async getId (emailUsuario: string, nomeTabela: String): Promise<number> {
+    static async getId (emailUsuario: string, nomeTabela = this.nomeTabela): Promise<number> {
         const [row] = await db.execute<RowDataPacket[]>(
             `SELECT id FROM ${nomeTabela} WHERE email = ?`,
             [emailUsuario]

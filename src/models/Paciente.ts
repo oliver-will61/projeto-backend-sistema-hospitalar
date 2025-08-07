@@ -10,6 +10,7 @@ import { tabela } from "../config/database";
 
 export class Paciente extends Usuario {
 
+    static nomeTabela = tabela.pacientes
     static async marcarConsulta(req:Request, res: Response) {
 
         try {
@@ -17,10 +18,10 @@ export class Paciente extends Usuario {
                 status} = req.body as ConsultaInput
             
             //pega o id do médico usadno como parametro o email
-            const idMedico = await Medico.getId(emailMedico, "profissional")
+            const idMedico = await Medico.getId(emailMedico) 
 
             //pega o id do paciente usando como parametro o email
-            const idPaciente = await Paciente.getId(emailPaciente, "pacientes") 
+            const idPaciente = await Paciente.getId(emailPaciente) 
 
             //pega o id unidade hospitalar usadno como parametro o nome da unidade
             const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)

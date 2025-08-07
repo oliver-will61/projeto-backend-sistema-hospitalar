@@ -15,8 +15,9 @@ export const db = mysql.createPool ({
     queueLimit: 0,
 });
 
+// armazena os nome das tabelas do banco de dados em valores estáticos
 export const tabela = {
     consultas: "consultas",
-    profissionais: "profissionais",
+    profissionais: "profissional",
     pacientes: "pacientes"
 } as const //garante a tipagem estatica
