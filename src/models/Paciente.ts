@@ -1,10 +1,10 @@
 import {ConsultaInput} from "../interfaces/ConsultaInput"
-import { ConsultaDb } from "../interfaces/ConsultaDb";
 import { Request, Response } from "express";
 import { Usuario } from "./Usuario";
 import { Medico } from "./Medico";
 import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
+import { RowDataPacket } from "mysql2";
 
 
 export class Paciente extends Usuario {
@@ -32,7 +32,7 @@ export class Paciente extends Usuario {
             }
 
             // trás as consultas do paciente que tem como status "agendado"
-            const [row] = await db.execute<ConsultaDb[]>(
+            const [row] = await db.execute<RowDataPacket[]>(
                 `SELECT data, id_medico, status FROM ${nomeTabelaConsulta} WHERE id_medico = ? AND status = ? AND data = ?` ,
                 [idMedico, status, data]
             )
@@ -41,7 +41,6 @@ export class Paciente extends Usuario {
                     throw new Error ("Já existe um consulta marcada para o horario escolhido!")
              }
         
-
             //marca a consulta no banco de dados
             const [resultado] = await db.execute(
                 `INSERT INTO ${nomeTabelaConsulta} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status) VALUES (?,?,?,?,?,?)`,

@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import {db} from '../config/database';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { UsuarioDb } from '../interfaces/UsuarioDb';
+import { RowDataPacket } from "mysql2";
 
 
 export class Usuario {
@@ -21,7 +21,7 @@ export class Usuario {
     }
 
     static async getId (emailUsuario: string, nomeTabela: String): Promise<number> {
-        const [row] = await db.execute<UsuarioDb[]>(
+        const [row] = await db.execute<RowDataPacket[]>(
             `SELECT id FROM ${nomeTabela} WHERE email = ?`,
             [emailUsuario]
         )
