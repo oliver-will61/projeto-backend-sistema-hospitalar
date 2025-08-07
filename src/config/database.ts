@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv'
+import { table } from 'console';
 
 dotenv.config();
 
@@ -13,3 +14,9 @@ export const db = mysql.createPool ({
     connectionLimit: 10,
     queueLimit: 0,
 });
+
+export const tabela = {
+    consultas: "consultas",
+    profissionais: "profissionais",
+    pacientes: "pacientes"
+} as const //garante a tipagem estatica

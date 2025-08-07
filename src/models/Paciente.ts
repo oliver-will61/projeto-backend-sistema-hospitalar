@@ -5,13 +5,12 @@ import { Medico } from "./Medico";
 import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
 import { RowDataPacket } from "mysql2";
+import { tabela } from "../config/database";
 
 
 export class Paciente extends Usuario {
 
     static async marcarConsulta(req:Request, res: Response) {
-
-        const tabelaConsulta = process.env.NOME_TABELA_CONSULTA
 
         try {
             const {emailPaciente, emailMedico, unidadeHospitalar, data, telemedicina, 
@@ -33,7 +32,7 @@ export class Paciente extends Usuario {
 
             // trás as consultas do paciente que tem como status "agendado"
             const [row] = await db.execute<RowDataPacket[]>(
-                `SELECT data, id_medico, status FROM ${tabelaConsulta} WHERE id_medico = ? AND status = ? AND data = ?` ,
+                `SELECT data, id_medico, status FROM ${tabela.consultas} WHERE id_medico = ? AND status = ? AND data = ?` ,
                 [idMedico, status, data]
             )
 
@@ -43,7 +42,7 @@ export class Paciente extends Usuario {
         
             //marca a consulta no banco de dados
             const [resultado] = await db.execute(
-                `INSERT INTO ${tabelaConsulta} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status) VALUES (?,?,?,?,?,?)`,
+                `INSERT INTO ${tabela.consultas} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status) VALUES (?,?,?,?,?,?)`,
                 [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status]
             )
 
