@@ -19,5 +19,6 @@ export const db = mysql.createPool ({
 export const tabela = {
     consultas: "consultas",
     profissionais: "profissional",
-    pacientes: "pacientes"
+    pacientes: "pacientes",
+    unidadeHospitalar: "unidade_hospitalar"
 } as const //garante a tipagem estatica

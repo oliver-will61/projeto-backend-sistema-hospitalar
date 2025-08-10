@@ -85,9 +85,9 @@ export class Paciente extends Usuario {
 
                 FROM ${tabela.consultas} c 
                 
-                LEFT JOIN profissional p ON c.id_medico = p.id
+                LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id
 
-                LEFT JOIN unidade_hospitalar u ON c.id_unidade_hospitalar = u.id
+                LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
 
                 WHERE c.id_paciente = ? AND c.status = ?`,
                 [idPaciente,  "agendado"]
