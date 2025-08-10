@@ -1,5 +1,5 @@
 import express from 'express'
-import {cadastro, login, marcarConsultaController} from '../controllers/pacienteController'
+import {cadastro, login, marcarConsultaController,  mostraConsultaController} from '../controllers/pacienteController'
 import { verificaToken } from '../middleware';
 
 const router = express.Router();
@@ -23,5 +23,11 @@ router.post('/marcarConsulta',
     (req, res, next) => {
         marcarConsultaController(req, res).catch(next)
     });
+
+router.post('/mostraConsulta', 
+    verificaToken, 
+    (req, res, next) => {
+        mostraConsultaController(req, res).catch(next)
+    })
 
 export default router

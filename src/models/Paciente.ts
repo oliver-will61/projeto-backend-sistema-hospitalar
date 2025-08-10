@@ -72,10 +72,27 @@ export class Paciente extends Usuario {
             const idPaciente = await Paciente.getId(emailPaciente) 
 
             const [rows] = await db.execute(
-                `SELECT * FROM ${tabela.consultas} WHERE = ? AND status = ?`,
+                `
+                -- p = profisionais, c = consulta, u = unidade
+
+                SELECT
+                p.nome AS nome_medico,
+                u.nome AS nome_unidade,
+
+                c.data,
+                c.telemedicina,
+                c.uuid
+
+                FROM ${tabela.consultas} c 
+                
+                LEFT JOIN profissional p ON c.id_medico = p.id
+
+                LEFT JOIN unidade_hospitalar u ON c.id_unidade_hospitalar = u.id
+
+                WHERE c.id_paciente = ? AND c.status = ?`,
                 [idPaciente,  "agendado"]
             )
-
+            
             return res.json({
               data: rows,
               message: "Todas as consultas agendadas"      
@@ -85,7 +102,7 @@ export class Paciente extends Usuario {
         } catch(error) {
             console.error(error);
             return res.status(500).json({
-                message: "Usuário não encontrado"
+                message: "Erro a realizar a consulta"
             })
             
         }

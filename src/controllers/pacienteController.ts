@@ -14,3 +14,7 @@ export const cadastro =  async (req: Request, res: Response) => {
 export const marcarConsultaController = async(req: Request, res: Response) => {
     Paciente.marcarConsulta(req, res)
 }
+
+export const mostraConsultaController = async (req: Request, res: Response) => {
+    Paciente.mostraConsulta(req, res)
+}
