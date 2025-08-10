@@ -63,5 +63,36 @@ export class Paciente extends Usuario {
             })
         }
     }
+
+    static async mostraConsulta(req: Request, res: Response) {
+        try {
+            const {emailPaciente} = req.body as ConsultaInput
+
+            //pega o id do paciente usando como parametro o email
+            const idPaciente = await Paciente.getId(emailPaciente) 
+
+            const [rows] = await db.execute(
+                `SELECT * FROM ${tabela.consultas} WHERE = ? AND status = ?`,
+                [idPaciente,  "agendado"]
+            )
+
+            return res.json({
+              data: rows,
+              message: "Todas as consultas agendadas"      
+            })
+
+
+        } catch(error) {
+            console.error(error);
+            return res.status(500).json({
+                message: "Usuário não encontrado"
+            })
+            
+        }
+    }
+
+    static async cancelarConsulta(req: Request, res: Response){
+
+    }
 }
 
