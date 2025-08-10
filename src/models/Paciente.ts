@@ -6,7 +6,7 @@ import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
 import { RowDataPacket } from "mysql2";
 import { tabela } from "../config/database";
-
+import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 
 export class Paciente extends Usuario {
 
@@ -40,11 +40,14 @@ export class Paciente extends Usuario {
             if (row.length > 0) {                
                     throw new Error ("Já existe um consulta marcada para o horario escolhido!")
              }
-        
+
+             //Gera o UUID
+             const uuid = uuidv4();
+             
             //marca a consulta no banco de dados
             const [resultado] = await db.execute(
-                `INSERT INTO ${tabela.consultas} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status) VALUES (?,?,?,?,?,?)`,
-                [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status]
+                `INSERT INTO ${tabela.consultas} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status, uuid) VALUES (?,?,?,?,?,?, UUID_TO_BIN(?))`,
+                [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status, uuid]
             )
 
             console.log("Consulta realizada com sucesso!");
