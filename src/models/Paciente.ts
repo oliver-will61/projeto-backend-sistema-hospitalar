@@ -6,6 +6,7 @@ import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
 import { RowDataPacket } from "mysql2";
 import { tabela } from "../config/database";
+import {binaryToUuidString} from "../config/database"
 import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 
 export class Paciente extends Usuario {
@@ -71,7 +72,7 @@ export class Paciente extends Usuario {
             //pega o id do paciente usando como parametro o email
             const idPaciente = await Paciente.getId(emailPaciente) 
 
-            const [rows] = await db.execute(
+            const [rows] = await db.execute<RowDataPacket[]>(
                 `
                 -- p = profisionais, c = consulta, u = unidade
 
@@ -92,9 +93,16 @@ export class Paciente extends Usuario {
                 WHERE c.id_paciente = ? AND c.status = ?`,
                 [idPaciente,  "agendado"]
             )
+
+            //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
+            const queryFormatada = rows.map(row => ({
+                ...row, 
+                uuid: binaryToUuidString(row.uuid)
+            }));
+            
             
             return res.json({
-              data: rows,
+              data: queryFormatada,
               message: "Todas as consultas agendadas"      
             })
 

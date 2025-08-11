@@ -1,6 +1,5 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv'
-import { table } from 'console';
 
 dotenv.config();
 
@@ -22,3 +21,12 @@ export const tabela = {
     pacientes: "pacientes",
     unidadeHospitalar: "unidade_hospitalar"
 } as const //garante a tipagem estatica
+
+export function binaryToUuidString(binaryBuffer: Buffer): string {
+
+    // Converte o Buffer para string hexadecimal (sem hífens)
+    const hex = binaryBuffer.toString('hex');
+
+    // Formata com hífens nas posições corretas
+    return `${hex.substring(0,8)}-${hex.substring(8,12)}-${hex.substring(12,16)}-${hex.substring(16,20)}-${hex.substring(20)}`;
+}
