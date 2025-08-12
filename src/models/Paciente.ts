@@ -4,7 +4,7 @@ import { Usuario } from "./Usuario";
 import { Medico } from "./Medico";
 import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
-import { RowDataPacket } from "mysql2";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { tabela } from "../config/database";
 import {binaryToUuidString} from "../config/database"
 import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
@@ -12,6 +12,7 @@ import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 export class Paciente extends Usuario {
 
     static nomeTabela = tabela.pacientes
+    
     static async marcarConsulta(req:Request, res: Response) {
 
         try {
@@ -116,8 +117,31 @@ export class Paciente extends Usuario {
         }
     }
 
-    static async cancelarConsulta(req: Request, res: Response){
+    static async excluiConsulta(req: Request, res: Response){
+        try {
+            const {uuid} = req.params // Ou req.body.uuid se enviar no corpo
+            
+            //realiza a exclusão   
+            // //ResultSetHeader seria o equivalente do RowDataPacket só para o DELETE
+            const [result] = await db.execute<ResultSetHeader>(
+                `DELETE FROM ${tabela.consultas} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
+                [uuid]
+            )
 
+            //verifica se a linha foi afetada
+            if (result.affectedRows === 0){
+                return res.status(404).json({
+                    message: "UUID não encontrado"
+                })
+            }
+
+            res.status(200).json({
+                message: "Registro excluido com sucesso"
+            });
+
+        } catch (error) {
+            console.error("Erro ao excluir", error)
+        }
     }
 }
 

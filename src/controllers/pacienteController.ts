@@ -18,3 +18,7 @@ export const marcarConsultaController = async(req: Request, res: Response) => {
 export const mostraConsultaController = async (req: Request, res: Response) => {
     Paciente.mostraConsulta(req, res)
 }
+
+export const excluiConsultaController = async(req: Request, res: Response) => {
+    Paciente.excluiConsulta(req, res)
+}
