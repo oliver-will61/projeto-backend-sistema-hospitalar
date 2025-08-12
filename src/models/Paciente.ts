@@ -66,19 +66,26 @@ export class Paciente extends Usuario {
         }
     }
 
-    static async mostraConsulta(req: Request, res: Response) {
+    static async mostraConsulta(
+        req: Request, 
+        res: Response, 
+        options: {
+            campoRetornoJoin: string
+        })
+
+        {
         try {
-            const {emailPaciente} = req.body as ConsultaInput
+            const {email} = req.body as ConsultaInput
 
             //pega o id do paciente usando como parametro o email
-            const idPaciente = await Paciente.getId(emailPaciente) 
+            const id = await Usuario.getId(email) 
 
             const [rows] = await db.execute<RowDataPacket[]>(
                 `
                 -- p = profisionais, c = consulta, u = unidade
 
                 SELECT
-                p.nome AS nome_medico,
+                p.nome AS ${options.campoRetornoJoin},
                 u.nome AS nome_unidade,
 
                 c.data,
@@ -87,12 +94,12 @@ export class Paciente extends Usuario {
 
                 FROM ${tabela.consultas} c 
                 
-                LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id
+                LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id   --PRECISA MUDAR
 
                 LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
 
-                WHERE c.id_paciente = ? AND c.status = ?`,
-                [idPaciente,  "agendado"]
+                WHERE c.id_paciente = ? AND c.status = ?`,  //PRECISA MUDAR
+                [id,  "agendado"]
             )
 
             //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
