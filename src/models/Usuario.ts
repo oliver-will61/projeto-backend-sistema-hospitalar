@@ -115,4 +115,66 @@ export class Usuario {
         }
 
     }
+
+    static async mostraConsulta(
+    req: Request, 
+    res: Response, 
+    options: {
+        campoRetornoJoin: string //nome_paciente
+        colunaJoin: string // id_medico
+        colunaParametroWhere: string //id_paciente
+
+    })
+
+    {
+    try {
+        const {email} = req.body as ConsultaInput
+
+        //pega o id do paciente usando como parametro o email
+        const id = await Usuario.getId(email) 
+
+        const [rows] = await db.execute<RowDataPacket[]>(
+            `
+            -- p = profisionais, c = consulta, u = unidade
+
+            SELECT
+            p.nome AS ${options.campoRetornoJoin},
+            u.nome AS nome_unidade,
+
+            c.data,
+            c.telemedicina,
+            c.uuid
+
+            FROM ${tabela.consultas} c 
+            
+            LEFT JOIN ${tabela.profissionais} p ON c.${options.colunaJoin} = p.id   
+
+            LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
+
+            WHERE c.${options.colunaParametroWhere} = ? AND c.status = ?`,  
+            [id,  "agendado"]
+        )
+
+        //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
+        const queryFormatada = rows.map(row => ({
+            ...row, 
+            uuid: binaryToUuidString(row.uuid)
+        }));
+        
+        
+        return res.json({
+            data: queryFormatada,
+            message: "Todas as consultas agendadas"      
+        })
+
+
+    } catch(error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Erro a realizar a consulta"
+        })
+        
+    }
+}
+
 }
