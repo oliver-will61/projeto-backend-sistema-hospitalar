@@ -3,6 +3,8 @@ import {db} from '../config/database';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
+import { ConsultaInput } from '../interfaces/ConsultaInput';
+import {tabela, binaryToUuidString} from '../config/database'
 
 export class Usuario {
 
@@ -34,7 +36,7 @@ export class Usuario {
         return row[0].id
     }
 
-    static async login(req: Request, res: Response, nomeTabela: String) {
+    static async login(req: Request, res: Response, nomeTabela: string) {
             try {
                 
                 const {email, senha} = req.body 
@@ -59,21 +61,37 @@ export class Usuario {
         
                     });
                 }
+
+                type TabelaParaAcesso = {
+                    [key: string]: string
+                }
+
+                const tabelaParaAcesso: TabelaParaAcesso = {
+                    [tabela.pacientes]: "paciente",
+                    [tabela.profissionais]: "medico"
+                }
                 
-                const token = jwt.sign(
-                    {
-                        id: usuario.id, 
-                        email: usuario.email, 
-                        usuario: usuario.nome,
-                        is_adm: usuario.is_adm
-                    }, 
-                    process.env.JWT_SECRET as string //pega a chave para validar o token
-                );
-        
-                return res.status(200).json({
+                if (nomeTabela in tabelaParaAcesso){
+                    const token = jwt.sign(
+                        {
+                            id: usuario.id, 
+                            email: usuario.email, 
+                            usuario: usuario.nome,
+                            is_adm: usuario.is_adm,
+                            acesso: tabelaParaAcesso[nomeTabela]
+                        }, 
+                        process.env.JWT_SECRET as string //pega a chave para validar o token
+                    );                
+                
+                    return res.status(200).json({
                     message: 'Login realizado com sucesso!',
                     token: token
-                });
+                    });
+                
+                }
+
+        
+
                 
             } catch (error) {
                 console.error('Erro no login', error);
@@ -120,9 +138,9 @@ export class Usuario {
     req: Request, 
     res: Response, 
     options: {
-        campoRetornoJoin: string //nome_paciente
-        colunaJoin: string // id_medico
-        colunaParametroWhere: string //id_paciente
+        campoRetorno: string //nome_medico ou nome_paciente 
+        colunaJoin: string // id_medico ou id_paciente
+        colunaParametroWhere: string //id_medico ou id_paciente
 
     })
 
@@ -138,7 +156,7 @@ export class Usuario {
             -- p = profisionais, c = consulta, u = unidade
 
             SELECT
-            p.nome AS ${options.campoRetornoJoin},
+            p.nome AS ${options.campoRetorno},
             u.nome AS nome_unidade,
 
             c.data,
