@@ -4,11 +4,11 @@ import { Paciente } from '../models/Paciente';
 
 
 export const login =  async (req: Request, res: Response) => {
-    Usuario.login(req, res, 'pacientes') // 3 argumento é o nome da tabela
+    Paciente.login(req, res, 'pacientes') // 3 argumento é o nome da tabela
 }
 
 export const cadastro =  async (req: Request, res: Response) => {
-    Usuario.cadastro(req, res, 'pacientes');
+    Paciente.cadastro(req, res, 'pacientes');
 };
 
 export const marcarConsultaController = async(req: Request, res: Response) => {

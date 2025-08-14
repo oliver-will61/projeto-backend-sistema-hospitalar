@@ -12,6 +12,7 @@ import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 export class Paciente extends Usuario {
 
     static nomeTabela = tabela.pacientes
+    static acesso = "paciente"
     
     static async marcarConsulta(req:Request, res: Response) {
 

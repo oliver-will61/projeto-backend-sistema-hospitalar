@@ -10,6 +10,8 @@ import { Paciente } from './Paciente';
 type TipoAcesso = 'paciente' | 'medico';
 
 export class Usuario {
+
+    static acesso = ''
     
     constructor(
         public cpf: string, public nome: string, public email: string, public senha: string, public telefone: string, 
@@ -63,13 +65,17 @@ export class Usuario {
         
                     });
                 }
+
+                console.log(this.acesso);
+                
                 
                 const token = jwt.sign(
                     {
                         id: usuario.id, 
                         email: usuario.email, 
                         usuario: usuario.nome,
-                        is_adm: usuario.is_adm
+                        is_adm: usuario.is_adm,
+                        acesso: this.acesso
                     }, 
                     process.env.JWT_SECRET as string //pega a chave para validar o token
                 );                
