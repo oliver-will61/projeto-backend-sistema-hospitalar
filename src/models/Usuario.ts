@@ -6,6 +6,8 @@ import { RowDataPacket } from "mysql2";
 import { ConsultaInput } from '../interfaces/ConsultaInput';
 import {tabela, binaryToUuidString} from '../config/database'
 
+type TipoAcesso = 'paciente' | 'medico';
+
 export class Usuario {
 
     static nomeTabela = ""
@@ -61,37 +63,22 @@ export class Usuario {
         
                     });
                 }
-
-                type TabelaParaAcesso = {
-                    [key: string]: string
-                }
-
-                const tabelaParaAcesso: TabelaParaAcesso = {
-                    [tabela.pacientes]: "paciente",
-                    [tabela.profissionais]: "medico"
-                }
                 
-                if (nomeTabela in tabelaParaAcesso){
-                    const token = jwt.sign(
-                        {
-                            id: usuario.id, 
-                            email: usuario.email, 
-                            usuario: usuario.nome,
-                            is_adm: usuario.is_adm,
-                            acesso: tabelaParaAcesso[nomeTabela]
-                        }, 
-                        process.env.JWT_SECRET as string //pega a chave para validar o token
-                    );                
-                
-                    return res.status(200).json({
-                    message: 'Login realizado com sucesso!',
-                    token: token
-                    });
-                
-                }
-
+                const token = jwt.sign(
+                    {
+                        id: usuario.id, 
+                        email: usuario.email, 
+                        usuario: usuario.nome,
+                        is_adm: usuario.is_adm
+                    }, 
+                    process.env.JWT_SECRET as string //pega a chave para validar o token
+                );                
+            
+                return res.status(200).json({
+                message: 'Login realizado com sucesso!',
+                token: token
+                });
         
-
                 
             } catch (error) {
                 console.error('Erro no login', error);
@@ -99,7 +86,6 @@ export class Usuario {
                     erro: 'Email não encontrado'
                 });
             }
-            
     }
 
     static async cadastro(req: Request, res: Response, nomeTabela: String){
@@ -134,65 +120,94 @@ export class Usuario {
 
     }
 
-    static async mostraConsulta(
-    req: Request, 
-    res: Response, 
-    options: {
-        campoRetorno: string //nome_medico ou nome_paciente 
-        colunaJoin: string // id_medico ou id_paciente
-        colunaParametroWhere: string //id_medico ou id_paciente
+    
 
-    })
+    static async mostraConsulta(req: Request, res: Response, acesso:TipoAcesso) {
 
-    {
-    try {
-        const {email} = req.body as ConsultaInput
+        try {
+            const {email} = req.body as ConsultaInput
 
-        //pega o id do paciente usando como parametro o email
-        const id = await Usuario.getId(email) 
+            //pega o id do paciente usando como parametro o email
+            const id = await Usuario.getId(email) 
 
-        const [rows] = await db.execute<RowDataPacket[]>(
-            `
-            -- p = profisionais, c = consulta, u = unidade
+            // define as variações de query e parametros com base no tipo de acesso
+            const config = {
+                paciente: {
+                    query: `
+                        -- p = profisionais, c = consulta, u = unidade
 
-            SELECT
-            p.nome AS ${options.campoRetorno},
-            u.nome AS nome_unidade,
+                        SELECT
+                        p.nome AS nome_medico,
+                        u.nome AS nome_unidade,
 
-            c.data,
-            c.telemedicina,
-            c.uuid
+                        c.data,
+                        c.telemedicina,
+                        c.uuid
 
-            FROM ${tabela.consultas} c 
+                        FROM ${tabela.consultas} c 
+                        
+                        LEFT JOIN ${tabela.profissionais} p ON c.medico_id = p.id   
+
+                        LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
+
+                        WHERE c.paciente_id = ? AND c.status = ?`, 
+
+                    params: [id, "agendado"] as const
+                },
+
+                medico: {
+                    query: `
+                        -- p = profisionais, c = consulta, u = unidade
+
+                        SELECT
+                        p.nome AS nome_paciente,
+                        u.nome AS nome_unidade,
+
+                        c.data,
+                        c.telemedicina,
+                        c.uuid
+
+                        FROM ${tabela.consultas} c 
+                        
+                        LEFT JOIN ${tabela.profissionais} p ON c.paciente_id = p.id   
+
+                        LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
+
+                        WHERE c.medico_id = ? AND c.status = ?`, 
+
+                    params: [id, "agendado"] as const
+                }
+            }
+
+            //verifiaca se o acesso é valido
+            if (!(acesso in config)) {
+                return res.status(400).json({message: "Tipo de acesso inválido"})
+            }
+
+            const [rows] = await db.execute<RowDataPacket[]>(
+                config[acesso].query, config[acesso].params
+                
+            )
+
+            //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
+            const queryFormatada = rows.map(row => ({
+                ...row, 
+                uuid: binaryToUuidString(row.uuid)
+            }));
+                
+                
+            return res.json({
+                data: queryFormatada,
+                message: "Todas as consultas agendadas"      
+            })
+        
+        } catch(error) {
+            console.error(error);
+            return res.status(500).json({
+                message: "Erro a realizar a consulta"
+            })
             
-            LEFT JOIN ${tabela.profissionais} p ON c.${options.colunaJoin} = p.id   
-
-            LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
-
-            WHERE c.${options.colunaParametroWhere} = ? AND c.status = ?`,  
-            [id,  "agendado"]
-        )
-
-        //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
-        const queryFormatada = rows.map(row => ({
-            ...row, 
-            uuid: binaryToUuidString(row.uuid)
-        }));
-        
-        
-        return res.json({
-            data: queryFormatada,
-            message: "Todas as consultas agendadas"      
-        })
-
-
-    } catch(error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Erro a realizar a consulta"
-        })
-        
+        }
     }
-}
 
 }
