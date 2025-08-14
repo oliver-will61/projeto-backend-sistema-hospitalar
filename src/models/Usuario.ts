@@ -5,12 +5,11 @@ import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 import { ConsultaInput } from '../interfaces/ConsultaInput';
 import {tabela, binaryToUuidString} from '../config/database'
+import { Paciente } from './Paciente';
 
 type TipoAcesso = 'paciente' | 'medico';
 
 export class Usuario {
-
-    static nomeTabela = ""
     
     constructor(
         public cpf: string, public nome: string, public email: string, public senha: string, public telefone: string, 
@@ -25,7 +24,8 @@ export class Usuario {
         this.idade = idade; 
     }
 
-    static async getId (emailUsuario: string, nomeTabela = this.nomeTabela): Promise<number> {
+    static async getId (emailUsuario: string, nomeTabela: string): Promise<number> {
+            
         const [row] = await db.execute<RowDataPacket[]>(
             `SELECT id FROM ${nomeTabela} WHERE email = ?`,
             [emailUsuario]
@@ -125,13 +125,23 @@ export class Usuario {
     static async mostraConsulta(req: Request, res: Response, acesso:TipoAcesso) {
 
         try {
-            const {email} = req.body as ConsultaInput
+            const {email} = req.body as ConsultaInput    
+
+            const idConfig = {
+                paciente: {
+                    nomeColunaDb: tabela.pacientes 
+                },
+
+                medico: {
+                    nomeColunaDb: tabela.profissionais 
+                }
+            }
 
             //pega o id do paciente usando como parametro o email
-            const id = await Usuario.getId(email) 
+            const id = await Usuario.getId(email, idConfig[acesso].nomeColunaDb) 
 
             // define as variações de query e parametros com base no tipo de acesso
-            const config = {
+            const queryConfig = {
                 paciente: {
                     query: `
                         -- p = profisionais, c = consulta, u = unidade
@@ -146,11 +156,11 @@ export class Usuario {
 
                         FROM ${tabela.consultas} c 
                         
-                        LEFT JOIN ${tabela.profissionais} p ON c.medico_id = p.id   
+                        LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id   
 
                         LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
 
-                        WHERE c.paciente_id = ? AND c.status = ?`, 
+                        WHERE c.id_paciente = ? AND c.status = ?`, 
 
                     params: [id, "agendado"] as const
                 },
@@ -169,23 +179,23 @@ export class Usuario {
 
                         FROM ${tabela.consultas} c 
                         
-                        LEFT JOIN ${tabela.profissionais} p ON c.paciente_id = p.id   
+                        LEFT JOIN ${tabela.profissionais} p ON c.id_paciente = p.id   
 
                         LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
 
-                        WHERE c.medico_id = ? AND c.status = ?`, 
+                        WHERE c.id_medico = ? AND c.status = ?`, 
 
                     params: [id, "agendado"] as const
                 }
             }
 
             //verifiaca se o acesso é valido
-            if (!(acesso in config)) {
+            if (!(acesso in queryConfig)) {
                 return res.status(400).json({message: "Tipo de acesso inválido"})
             }
 
             const [rows] = await db.execute<RowDataPacket[]>(
-                config[acesso].query, config[acesso].params
+                queryConfig[acesso].query, queryConfig[acesso].params
                 
             )
 

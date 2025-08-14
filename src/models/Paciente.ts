@@ -20,10 +20,10 @@ export class Paciente extends Usuario {
                 status} = req.body as ConsultaInput
             
             //pega o id do médico usadno como parametro o email
-            const idMedico = await Medico.getId(emailMedico) 
+            const idMedico = await Usuario.getId(emailMedico, tabela.profissionais) 
 
             //pega o id do paciente usando como parametro o email
-            const idPaciente = await Paciente.getId(emailPaciente) 
+            const idPaciente = await Usuario.getId(emailPaciente, tabela.pacientes) 
 
             //pega o id unidade hospitalar usadno como parametro o nome da unidade
             const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)
