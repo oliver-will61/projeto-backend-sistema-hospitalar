@@ -42,3 +42,24 @@ export const verificaToken = (req: Request, res: Response, next: NextFunction): 
         })
     }
 };
+
+
+const verificaAcesso = (acessoRequerido: string) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const acessoLiberado = req.user?.acesso === acessoRequerido
+
+        if(!acessoLiberado) {
+            res.status(403).json({
+                message: `Acesso negado, requer acesso de ${acessoRequerido}`
+            });
+
+            return
+        }
+
+        next();
+    } ;
+};
+
+
+export const isMedico = verificaAcesso('medico')
+export const isPaciente = verificaAcesso('paciente')
