@@ -1,6 +1,7 @@
 import express from 'express'
 import {cadastro, login, marcarConsultaController,  mostraConsultaController, excluiConsultaController} from '../controllers/pacienteController'
-import { verificaToken } from '../middleware';
+import { verificaToken} from '../middleware';
+import { isPaciente } from '../middleware/isPaciente';
 
 const router = express.Router();
 
@@ -19,12 +20,13 @@ router.post('/login', (req, res, next) => {
 });
 
 router.post('/marcarConsulta',
-    verificaToken, 
+    verificaToken, isPaciente,
+
     (req, res, next) => {
         marcarConsultaController(req, res).catch(next)
     });
 
-router.post('/mostraConsulta', 
+router.post('/mostraConsulta',
     verificaToken, 
     (req, res, next) => {
         mostraConsultaController(req, res).catch(next)

@@ -7,6 +7,7 @@ declare global {
             user?: {
                 id: string,
                 is_adm: boolean | number;
+                acesso: string
             };
         }
     }
@@ -27,7 +28,8 @@ export const verificaToken = (req: Request, res: Response, next: NextFunction): 
             id: string,
             email: string,
             usuario: string,
-            is_adm: number;
+            is_adm: number,
+            acesso: string
         };
 
         //add os dados descriptografados do usuário à requisição
