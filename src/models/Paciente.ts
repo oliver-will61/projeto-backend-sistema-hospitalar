@@ -1,12 +1,10 @@
 import {ConsultaInput} from "../interfaces/ConsultaInput"
 import { Request, Response } from "express";
 import { Usuario } from "./Usuario";
-import { Medico } from "./Medico";
 import { UnidadeHospitalar } from "./UnidadeMedica";
 import { db } from "../config/database";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { tabela } from "../config/database";
-import {binaryToUuidString} from "../config/database"
 import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 
 export class Paciente extends Usuario {

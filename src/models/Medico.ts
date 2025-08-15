@@ -17,14 +17,6 @@ export class Medico extends Usuario {
         this.especialidade = especialidade,
         this.admin = admin;
     }; 
-
-
-
-    static async mostraConultasParaRealizar(req: Request, res: Response){
-        
-
-    }
-
 }
 
 
