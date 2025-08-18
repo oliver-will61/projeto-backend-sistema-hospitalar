@@ -4,6 +4,7 @@ import { tabela } from "../config/database";
 export class Medico extends Usuario {
 
     static nomeTabela = tabela.profissionais;
+    static acesso = "medico"
 
     constructor(
         cpf: string, nome: string, email: string, senha: string, telefone: string, 

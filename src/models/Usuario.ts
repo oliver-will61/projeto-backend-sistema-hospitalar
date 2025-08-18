@@ -7,7 +7,7 @@ import { ConsultaInput } from '../interfaces/ConsultaInput';
 import {tabela, binaryToUuidString} from '../config/database'
 import { Paciente } from './Paciente';
 
-type TipoAcesso = 'paciente' | 'medico';
+type TipoAcesso = 'medico' | 'paciente';
 
 export class Usuario {
 
@@ -130,6 +130,8 @@ export class Usuario {
 
     static async mostraConsulta(req: Request, res: Response, acesso:TipoAcesso) {
 
+        console.log(acesso);
+        
         try {
             const {email} = req.body as ConsultaInput    
 
@@ -142,9 +144,15 @@ export class Usuario {
                     nomeColunaDb: tabela.profissionais 
                 }
             }
+            console.log(acesso);
+            console.log(idConfig[acesso]);
+            
+            console.log(`Nome da tabela é: ${idConfig[acesso].nomeColunaDb}`);
 
             //pega o id do paciente usando como parametro o email
             const id = await Usuario.getId(email, idConfig[acesso].nomeColunaDb) 
+
+            
 
             // define as variações de query e parametros com base no tipo de acesso
             const queryConfig = {

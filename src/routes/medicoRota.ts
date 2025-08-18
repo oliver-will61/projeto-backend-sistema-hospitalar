@@ -1,7 +1,7 @@
 import express from 'express'
 import {login} from '../controllers/medicoController';
 import { verificaToken, isMedico } from '../middleware';
-import { mostraConsultaController } from '../controllers/pacienteController';
+import { mostraConsultaController } from '../controllers/medicoController';
 
 const router = express.Router();
 const app = express()
