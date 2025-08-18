@@ -11,9 +11,14 @@ router.post('/login', (req, res, next) => {
     login(req, res).catch(next)
 });
 
-router.post('/cadastroAdm', (req, res, next) => {
-    
+router.post('/cadastroAdm', 
+
+    verificaToken,  // 1º: Verifica se o token é válido
+    isAdmin,        // 2º: Verifica se o usuário é admin
+    (req, res, next) => {
+
     cadastroAdm(req, res).catch(next)});
+
 
 router.post('/cadastroMedico',
     verificaToken,  // 1º: Verifica se o token é válido
