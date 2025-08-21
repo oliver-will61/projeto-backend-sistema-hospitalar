@@ -1,5 +1,7 @@
 import { Usuario } from "./Usuario";
 import { tabela } from "../config/database";
+import { PrescricaoInput } from "../interfaces/prescricao_input";
+import {Request, Response} from 'express';
 
 export class Medico extends Usuario {
 
@@ -18,6 +20,21 @@ export class Medico extends Usuario {
         this.especialidade = especialidade,
         this.admin = admin;
     }; 
+
+    static geraPrescricao(req: Request, res: Response){
+
+        try {
+            const {diagnostico, receita, requisicao_exame} = req.body as PrescricaoInput 
+
+            console.log(req.body);
+            
+
+
+        } catch (error) {
+            console.error();
+        }
+
+    }
 }
 
 
