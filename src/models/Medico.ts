@@ -1,5 +1,5 @@
 import { Usuario } from "./Usuario";
-import { tabela } from "../config/database";
+import { db, tabela } from "../config/database";
 import { PrescricaoInput } from "../interfaces/prescricao_input";
 import {Request, Response} from 'express';
 
@@ -21,17 +21,26 @@ export class Medico extends Usuario {
         this.admin = admin;
     }; 
 
-    static geraPrescricao(req: Request, res: Response){
+    static async geraPrescricao(req: Request, res: Response){
 
         try {
+            
             const {diagnostico, receita, requisicao_exame} = req.body as PrescricaoInput 
 
-            console.log(req.body);
+            const [resultado] = await db.execute(
+                `INSERT INTO ${nomeTabela} (diagnostico, receita, autorizacao_exame) VALUE (?,?,?)`,
+                [diagnostico, receita, requisicao_exame]
+            ) 
             
+            return res.json({message: "Prescrição gerada com sucesso!"})
 
 
         } catch (error) {
-            console.error();
+            console.error(error)
+            return res.status(500).json({
+            message:"Erro ao gerar a prescrição",
+            error:error
+            });
         }
 
     }
