@@ -1,7 +1,5 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv'
-import { error } from 'console';
-import { buffer } from 'stream/consumers';
 
 dotenv.config();
 
@@ -21,7 +19,8 @@ export const tabela = {
     consultas: "consultas",
     profissionais: "profissional",
     pacientes: "pacientes",
-    unidadeHospitalar: "unidade_hospitalar"
+    unidadeHospitalar: "unidade_hospitalar",
+    prescricao: "prescricao"
 } as const //garante a tipagem estatica
 
 //função para conveter BINARY16 para UUID string
