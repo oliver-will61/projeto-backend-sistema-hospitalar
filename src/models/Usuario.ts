@@ -129,8 +129,6 @@ export class Usuario {
     
 
     static async mostraConsulta(req: Request, res: Response, acesso:TipoAcesso) {
-
-        console.log(acesso);
         
         try {
             const {email} = req.body as ConsultaInput    
@@ -144,10 +142,6 @@ export class Usuario {
                     nomeColunaDb: tabela.profissionais 
                 }
             }
-            console.log(acesso);
-            console.log(idConfig[acesso]);
-            
-            console.log(`Nome da tabela é: ${idConfig[acesso].nomeColunaDb}`);
 
             //pega o id do paciente usando como parametro o email
             const id = await Usuario.getId(email, idConfig[acesso].nomeColunaDb) 
@@ -231,6 +225,26 @@ export class Usuario {
                 message: "Erro a realizar a consulta"
             })
             
+        }
+    }
+
+    static async selecionaConsulta(req: Request, res: Response) {
+        try {
+            const {uuid} = req.params 
+
+            const [result] = await db.execute<RowDataPacket[]>(
+            `SELECT FROM ${tabela.consultas} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
+            [uuid]
+            )
+
+            const consulta = (uuid as any)[0]
+            
+            if(!consulta) {
+                console.log("Consulta não encontrada");
+                
+            }
+        } catch (error) {
+
         }
     }
 

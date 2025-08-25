@@ -21,7 +21,7 @@ export class Medico extends Usuario {
         this.admin = admin;
     }; 
 
-    static async geraPrescricao(req: Request, res: Response, nomeTabela:string){
+    static async geraPrescricao(req: Request, res: Response, nomeTabela: string){
 
         try {
             
@@ -34,6 +34,7 @@ export class Medico extends Usuario {
             
             return res.json({message: "Prescrição gerada com sucesso!"})
 
+
         } catch (error) {
             console.error(error)
             return res.status(500).json({
@@ -41,6 +42,7 @@ export class Medico extends Usuario {
             error:error
             });
         }
+
     }
 }
 
