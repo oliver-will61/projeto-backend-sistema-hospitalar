@@ -126,8 +126,6 @@ export class Usuario {
 
     }
 
-    
-
     static async mostraTodasConsultas(req: Request, res: Response, acesso:TipoAcesso) {
         
         try {
@@ -281,5 +279,4 @@ export class Usuario {
             console.error(error)
         }
     }
-
 }

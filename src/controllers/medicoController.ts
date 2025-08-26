@@ -7,10 +7,14 @@ export const login = async (req: Request, res: Response) => {
     Medico.login(req, res, 'profissional')
 }
 
-export const mostraConsultaController = async (req: Request, res: Response) => {
+export const mostraTodasConsultasController = async (req: Request, res: Response) => {
     Medico.mostraTodasConsultas(req, res, 'medico')
 }
 
 export const geraPrescricaoController = async (req: Request, res: Response) => {
     Medico.geraPrescricao(req, res, tabela.prescricao)
+}
+
+export  const mostraConsultaController = async (req: Request, res: Response) => {
+    Medico.mostraConsulta(req, res)
 }
