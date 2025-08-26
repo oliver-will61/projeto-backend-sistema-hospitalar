@@ -35,8 +35,6 @@ export const verificaToken = (req: Request, res: Response, next: NextFunction): 
         //add os dados descriptografados do usuário à requisição
         req.user = decoded 
 
-        console.log(req.user);
-        
         next();
     } catch(error){
         console.error(error)
