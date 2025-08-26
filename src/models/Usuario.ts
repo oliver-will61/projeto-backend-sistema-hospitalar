@@ -128,7 +128,7 @@ export class Usuario {
 
     
 
-    static async mostraConsulta(req: Request, res: Response, acesso:TipoAcesso) {
+    static async mostraTodasConsultas(req: Request, res: Response, acesso:TipoAcesso) {
         
         try {
             const {email} = req.body as ConsultaInput    
@@ -228,23 +228,32 @@ export class Usuario {
         }
     }
 
-    static async selecionaConsulta(req: Request, res: Response) {
+    static async mostraConsulta(req: Request, res: Response) {
         try {
             const {uuid} = req.params 
 
             const [result] = await db.execute<RowDataPacket[]>(
-            `SELECT FROM ${tabela.consultas} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
+            `SELECT * FROM ${tabela.consultas} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
             [uuid]
             )
 
-            const consulta = (uuid as any)[0]
+            const consulta = (result as any)[0]
+
+            console.log(consulta);
             
             if(!consulta) {
-                console.log("Consulta não encontrada");
-                
+                return res.status(404).json({
+                    message: "UUID não encontrado"
+                })
             }
-        } catch (error) {
 
+            res.status(200).json({
+                message: "Consulta Selecionada",
+                consultaData: consulta
+            })
+
+        } catch (error) {
+            console.error(error)
         }
     }
 

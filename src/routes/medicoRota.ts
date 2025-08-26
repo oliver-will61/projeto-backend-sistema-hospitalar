@@ -12,7 +12,7 @@ router.post('/login', (req, res, next) => {
     login(req, res).catch(next)});
 
 
-router.post('/mostraConsulta',
+router.post('/mostraTodasConsultas',
     verificaToken,  isMedico,
     (req, res, next) => {
         mostraConsultaController(req, res).catch(next)

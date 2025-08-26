@@ -1,6 +1,6 @@
 import express from 'express'
-import {cadastro, login, marcarConsultaController,  mostraConsultaController, excluiConsultaController} from '../controllers/pacienteController'
-import { verificaToken, isMedico, isPaciente} from '../middleware';
+import {cadastro, login, marcarConsultaController, mostraConsultaController, mostraTodasConsultasController, excluiConsultaController} from '../controllers/pacienteController'
+import { verificaToken, isPaciente} from '../middleware';
 
 const router = express.Router();
 
@@ -25,11 +25,18 @@ router.post('/marcarConsulta',
         marcarConsultaController(req, res).catch(next)
     });
 
-router.post('/mostraConsulta',
+router.post('/mostraTodasConsultas',
     verificaToken,  isPaciente,
     (req, res, next) => {
-        mostraConsultaController(req, res).catch(next)
+        mostraTodasConsultasController(req, res).catch(next)
     })
+
+router.get('/mostraConsulta/:uuid',
+    verificaToken, isPaciente,
+    (req, res, next) => {
+        mostraConsultaController(req, res).catch(next)
+    }
+)
 
 router.delete('/excluiConsulta/:uuid',
     verificaToken, isPaciente,
