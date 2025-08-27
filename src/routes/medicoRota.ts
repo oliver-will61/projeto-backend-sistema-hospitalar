@@ -18,7 +18,7 @@ router.post('/mostraTodasConsultas',
         mostraTodasConsultasController(req, res).catch(next)
     })
 
-router.post('/geraPrescricao', 
+router.post('/geraPrescricao/:uuid', 
     verificaToken, isMedico,
     (req, res, next) => {
         geraPrescricaoController(req, res).catch(next)

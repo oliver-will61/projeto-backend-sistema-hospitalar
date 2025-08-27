@@ -66,9 +66,6 @@ export class Usuario {
                     });
                 }
 
-                console.log(this.acesso);
-                
-                
                 const token = jwt.sign(
                     {
                         id: usuario.id, 

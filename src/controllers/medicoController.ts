@@ -12,7 +12,7 @@ export const mostraTodasConsultasController = async (req: Request, res: Response
 }
 
 export const geraPrescricaoController = async (req: Request, res: Response) => {
-    Medico.geraPrescricao(req, res, tabela.prescricao)
+    Medico.geraPrescricao(req, res, tabela.prescricao, tabela.consultas)
 }
 
 export  const mostraConsultaController = async (req: Request, res: Response) => {
