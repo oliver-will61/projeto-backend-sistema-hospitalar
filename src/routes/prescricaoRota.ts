@@ -8,7 +8,7 @@ const app = express()
 app.use(express.json());
 
 
-router.get('/prescricao/:idConsulta', 
+router.get('/:uuidConsulta', 
     verificaToken, 
 
     (req, res, next) => {

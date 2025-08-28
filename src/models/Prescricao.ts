@@ -9,43 +9,36 @@ export class Prescricao {
     static async mostraPrescricao(req: Request, res: Response, nomeTabela: string ) {
         try {
 
-            const {idConsulta} = req.params
+            const {uuidConsulta} = req.params            
 
             const [row] = await db.execute<RowDataPacket[]> (
                 `
-                    SELECT 
-                    p.id_consulta
-                    p.diagnostico, 
-                    p.receita, 
-                    p.autorizacao_exame, 
+                    SELECT diagnostico, receita, autorizacao_exame
 
-                    pac.nome as nome_paciente,
-                    pro.nome as nome_medico,
-                    u.nome as nome_unidade,
-                    
-                    FROM ${tabela.prescricao} p
+                    FROM ${tabela.prescricao} 
 
-                    INNER JOIN ${tabela.consultas} c ON p.id_consulta = c.id
-                    INNER JOIN ${tabela.pacientes} pac ON  c.id_paciente = pac.id
-                    INNER JOIN ${tabela.profissionais} pro ON  c.id_medico = pro.id
-                    INNER JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade =  u.id
-
-                    WHERE id_consulta = ?
+                    WHERE uuid_consulta = UUID_TO_BIN(?)
                 `,
-                [idConsulta]
+                [uuidConsulta]
             )
 
             const prescricao = (row as any)[0]
 
-            if(prescricao) {
+            if(!prescricao) {
                 return res.status(404).json({
-                    message: "ID da consulta não encontrado"
+                    message: "UUID da consulta não encontrado"
                 })
+            }
+            
+            // para trocar o valor autorizacao_exame de 1 para "permitido"
+            const prescricaoFormata = {
+                ... prescricao, 
+                    autorizacao_exame: prescricao.autorizacao_exame === 1 || prescricao.autorizacao_exame === true ? "Permitido" : "Não permitido"
             }
 
             res.status(200).json({
                 message: "Prescrição Selecionada",
-                data: prescricao
+                data: prescricaoFormata,
             })
 
         } catch (error) {

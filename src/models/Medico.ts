@@ -42,8 +42,8 @@ export class Medico extends Usuario {
 
             const [resultado] = await db.execute(
                 `
-                INSERT INTO ${nomeTabelaPrescricao} (id_consulta, diagnostico, receita, autorizacao_exame) VALUE (?,?,?,?)`,
-                [consultaId, diagnostico, receita, requisicao_exame]
+                INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame) VALUE (?,UUID_TO_BIN(?),?,?,?)`,
+                [consultaId, uuid, diagnostico, receita, requisicao_exame]
             ) 
             
             return res.json({message: "Prescrição gerada com sucesso!"})

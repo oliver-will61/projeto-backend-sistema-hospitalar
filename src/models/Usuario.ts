@@ -153,9 +153,10 @@ export class Usuario {
                         p.nome AS nome_medico,
                         u.nome AS nome_unidade,
 
+                        c.id,
+                        c.uuid,
                         c.data,
-                        c.telemedicina,
-                        c.uuid
+                        c.telemedicina
 
                         FROM ${tabela.consultas} c 
                         
@@ -236,10 +237,11 @@ export class Usuario {
                 m.nome as nome_medico,
                 u.nome as nome_unidade,
 
+                c.id,
+                c.uuid,
                 c.data,
-                c.telemedicina,
-                c.uuid
-
+                c.telemedicina
+ 
                 FROM ${tabela.consultas} c
                 
                 LEFT JOIN ${tabela.pacientes} p ON c.id_paciente = p.id
