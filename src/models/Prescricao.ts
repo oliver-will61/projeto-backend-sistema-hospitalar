@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { tabela } from "../config/database";
 import { db } from "../config/database";
 import { RowDataPacket } from "mysql2";
-
+import { PrescricaoInput } from "../interfaces/prescricao_input";
 
 export class Prescricao {
 
@@ -46,4 +46,42 @@ export class Prescricao {
             return 
         }
     }
+
+    static async geraPrescricao(req: Request, res: Response, nomeTabelaPrescricao: string, nomeTabelaConsulta: string){
+
+    try {
+        
+        const {diagnostico, receita, requisicao_exame} = req.body as PrescricaoInput 
+        const  {uuidConsulta} = req.params
+
+        const [consultaRow] = await db.execute<RowDataPacket[]>(
+                `SELECT id FROM ${nomeTabelaConsulta} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
+                [uuidConsulta]
+        )
+
+        if (consultaRow.length === 0) {
+            throw new Error ("Consulta não encontrada!")
+        }
+
+        const consultaId = consultaRow[0].id
+
+        const [resultado] = await db.execute(
+            `
+            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame) VALUE (?,UUID_TO_BIN(?),?,?,?)`,
+            [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame]
+        ) 
+        
+        return res.json({message: "Prescrição gerada com sucesso!"})
+
+
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+        message:"Erro ao gerar a prescrição",
+        error:error
+        });
+    }
+
+}
+
 }
