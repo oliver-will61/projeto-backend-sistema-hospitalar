@@ -5,8 +5,6 @@ import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 import { ConsultaInput } from '../interfaces/ConsultaInput';
 import {tabela, binaryToUuidString} from '../config/database'
-import { Paciente } from './Paciente';
-
 type TipoAcesso = 'medico' | 'paciente';
 
 export class Usuario {
