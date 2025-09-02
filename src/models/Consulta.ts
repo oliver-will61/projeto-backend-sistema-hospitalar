@@ -246,28 +246,5 @@ export class Consulta {
             console.error("Erro ao excluir", error)
         }
     }
-
-    static async geraCodigo(nomeTabela: string) {
-
-        try {
-            while (true) {
-                const codigo = Math.floor(100000 + Math.random() * 900000);
-
-                const [row] = await db.execute<RowDataPacket[]>(`
-                    SELECT codigo from ${nomeTabela} WHERE codigo = ${codigo}
-                    `)
-
-                if(row.length === 0) {
-                    return codigo
-                }
-
-                console.log(`codigo ${codigo} já existe, tentando novamente...`);
-                
-            }
-
-        } catch (error){
-            console.error(error)
-        }
-    }
 }
 

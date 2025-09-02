@@ -6,6 +6,32 @@ import { PrescricaoInput } from "../interfaces/prescricao_input";
 
 export class Prescricao {
 
+    private nomeTabelaPrescricao = tabela.prescricao
+
+    static async geraCodigo(nomeTabela: string) {
+
+        try {
+            while (true) {
+                const codigo = Math.floor(100000 + Math.random() * 900000);
+
+                const [row] = await db.execute<RowDataPacket[]>(`
+                    SELECT codigo from ${nomeTabela} WHERE codigo = ${codigo}
+                    `)
+
+                if(row.length === 0) {
+                    return codigo
+                }
+
+                console.log(`codigo ${codigo} já existe, tentando novamente...`);
+                
+            }
+
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+
     static async mostraPrescricao(req: Request, res: Response, nomeTabela: string ) {
         try {
 
@@ -65,10 +91,12 @@ export class Prescricao {
 
         const consultaId = consultaRow[0].id
 
+        const codigoPrescricao = Prescricao.geraCodigo(nomeTabelaPrescricao)
+
         const [resultado] = await db.execute(
             `
-            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame) VALUE (?,UUID_TO_BIN(?),?,?,?)`,
-            [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame]
+            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,UUID_TO_BIN(?),?,?,?,?)`,
+            [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
         
         return res.json({message: "Prescrição gerada com sucesso!"})
