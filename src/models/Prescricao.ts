@@ -4,6 +4,9 @@ import { db } from "../config/database";
 import { RowDataPacket } from "mysql2";
 import { PrescricaoInput } from "../interfaces/prescricao_input";
 
+// biblioteca responsável por gerar código aleatorios
+import { customAlphabet } from 'nanoid'
+
 export class Prescricao {
 
     private nomeTabelaPrescricao = tabela.prescricao
@@ -11,12 +14,16 @@ export class Prescricao {
     static async geraCodigo(nomeTabela: string) {
 
         try {
+
+            const geradorDeCodigo = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 6)
+
             while (true) {
-                const codigo = Math.floor(100000 + Math.random() * 900000);
+
+                const codigo = geradorDeCodigo()
 
                 const [row] = await db.execute<RowDataPacket[]>(`
-                    SELECT codigo from ${nomeTabela} WHERE codigo = ${codigo}
-                    `)
+                    SELECT codigo FROM ${nomeTabela} WHERE codigo = ?`,
+                [codigo])
 
                 if(row.length === 0) {
                     return codigo
@@ -91,8 +98,8 @@ export class Prescricao {
 
         const consultaId = consultaRow[0].id
 
-        const codigoPrescricao = Prescricao.geraCodigo(nomeTabelaPrescricao)
-
+        const codigoPrescricao = await Prescricao.geraCodigo(nomeTabelaPrescricao)
+                
         const [resultado] = await db.execute(
             `
             INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,UUID_TO_BIN(?),?,?,?,?)`,
