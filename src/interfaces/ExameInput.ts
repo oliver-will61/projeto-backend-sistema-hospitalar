@@ -4,5 +4,5 @@ export interface ExameInput {
     unidadeHospitalar: string,
     data: Date, 
     tipo: string,
-    status: string
+    status: string,
 }
