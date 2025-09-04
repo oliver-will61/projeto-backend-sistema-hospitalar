@@ -8,6 +8,7 @@ import pagesRota from './routes/pagesRota'
 import medicoRota from './routes/medicoRota'
 import admRota from './routes/admRota'
 import prescricaoRota from './routes/prescricaoRota';
+import exameRota from './routes/exameRota';
 
 // cria instância do express
 const app = express();  
@@ -23,6 +24,7 @@ app.use('/paciente', pacienteRota);
 app.use('/medico', medicoRota)
 app.use('/adm', admRota)
 app.use('/prescricao', prescricaoRota)
+app.use('/exame', exameRota)
 
 
 export default app;
