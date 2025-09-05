@@ -3,6 +3,7 @@ import {ExameInput} from "../interfaces/ExameInput"
 import { Request, Response } from "express"
 import { Usuario } from "./Usuario"
 import { UnidadeHospitalar } from "./UnidadeMedica"
+import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 
 export class Exame {
 
@@ -15,7 +16,7 @@ export class Exame {
         const {codigoPrescricao} = req.params
 
 
-        const {emailPaciente, emailMedico, unidadeHospitalar,data, tipo}  = req.body as ExameInput
+        const {emailPaciente, emailMedico, unidadeHospitalar,data, tipo, status}  = req.body as ExameInput
 
         //pega o id do médico usadno como parametro o email
         const idMedico = await Usuario.getId(emailMedico, tabela.profissionais) 
@@ -26,12 +27,20 @@ export class Exame {
         //pega o id unidade hospitalar usadno como parametro o nome da unidade
         const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)
 
+        //Gera o UUID
+        const uuid = uuidv4();
+
         
         const [result] = await db.execute(`
-            INSERT INTO ${Exame.nomeTabelaExame} (id_unidade_hospitalar, id_paciente, id_medico, data, tipo, status) VALUES (?,?,?,?,?,?)`,
-            [idUnidadeHospitalar, idPaciente, idMedico, data, tipo])
+            INSERT INTO ${Exame.nomeTabelaExame} (id_unidade_hospitalar, id_paciente, id_medico, uuid, data, tipo, status) VALUES (?,?,?,UUID_TO_BIN(?),?,?,?)`,
+            [idUnidadeHospitalar, idPaciente, idMedico, uuid, data, tipo, status])
 
         console.log("Consulta agendada com sucesso!");
+
+
+        return res.status(201).json({
+            messagem: "Consulta agendada com sucesso!"
+        })
         
 
         } catch (error) {

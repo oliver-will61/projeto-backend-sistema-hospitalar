@@ -46,7 +46,7 @@ export class Prescricao {
 
             const [row] = await db.execute<RowDataPacket[]> (
                 `
-                    SELECT diagnostico, receita, autorizacao_exame
+                    SELECT diagnostico, receita, autorizacao_exame, codigo
 
                     FROM ${tabela.prescricao} 
 
