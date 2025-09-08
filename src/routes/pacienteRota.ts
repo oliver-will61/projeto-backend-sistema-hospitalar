@@ -1,6 +1,6 @@
 import express from 'express'
 import {cadastro, login} from '../controllers/pacienteController'
-import {marcarConsultaController, mostraConsultaController, mostraTodasConsultasPacienteController, excluiConsultaController} from '../controllers/consultaController'
+import {marcarConsultaController, mostraConsultaController, mostraTodasConsultasPacienteController, cancelaConsultaController} from '../controllers/consultaController'
 import { verificaToken, isPaciente} from '../middleware';
 import {mostraTodosExamesPacienteController} from '../controllers/exameController'
 
@@ -40,10 +40,10 @@ router.get('/mostraConsulta/:uuid',
     }
 )
 
-router.delete('/excluiConsulta/:uuid',
+router.patch('/consulta/:uuid',
     verificaToken, isPaciente,
     (req, res, next) => {
-        excluiConsultaController(req, res).catch(next)
+        cancelaConsultaController(req, res).catch(next)
     } 
 )
 

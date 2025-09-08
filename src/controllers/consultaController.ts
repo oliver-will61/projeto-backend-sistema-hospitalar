@@ -13,8 +13,8 @@ export const mostraTodasConsultasMedicoController = async (req: Request, res: Re
     Consulta.mostraTodasConsultas(req, res, 'medico')
 }
 
-export const excluiConsultaController = async(req: Request, res: Response) => {
-    Consulta.excluiConsulta(req, res)
+export const cancelaConsultaController = async(req: Request, res: Response) => {
+    Consulta.cancela(req, res)
 }
 
 export const mostraConsultaController = async(req: Request, res: Response) => {

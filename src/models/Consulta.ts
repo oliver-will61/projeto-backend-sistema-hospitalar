@@ -219,14 +219,16 @@ export class Consulta {
         }
     }
 
-    static async excluiConsulta(req: Request, res: Response){
+    static async cancela(req: Request, res: Response){
         try {
             const {uuid} = req.params // Ou req.body.uuid se enviar no corpo
             
             //realiza a exclusão   
             // //ResultSetHeader seria o equivalente do RowDataPacket só para o DELETE
             const [result] = await db.execute<ResultSetHeader>(
-                `DELETE FROM ${tabela.consultas} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
+                `UPDATE ${tabela.consultas} 
+                SET status = "cancelado" 
+                WHERE uuid = UNHEX(REPLACE(?, '-', ''))` , 
                 [uuid]
             )
 
@@ -238,11 +240,11 @@ export class Consulta {
             }
 
             res.status(200).json({
-                message: "Registro excluido com sucesso"
+                message: "Registro cancelado com sucesso"
             });
 
         } catch (error) {
-            console.error("Erro ao excluir", error)
+            console.error("Erro ao cancelar", error)
         }
     }
 
