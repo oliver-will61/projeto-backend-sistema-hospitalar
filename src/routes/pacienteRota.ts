@@ -2,6 +2,7 @@ import express from 'express'
 import {cadastro, login} from '../controllers/pacienteController'
 import {marcarConsultaController, mostraConsultaController, mostraTodasConsultasPacienteController, excluiConsultaController} from '../controllers/consultaController'
 import { verificaToken, isPaciente} from '../middleware';
+import {mostraTodosExamesPacienteController} from '../controllers/exameController'
 
 const router = express.Router();
 
@@ -44,6 +45,13 @@ router.delete('/excluiConsulta/:uuid',
     (req, res, next) => {
         excluiConsultaController(req, res).catch(next)
     } 
+)
+
+router.get('/exame/', 
+    verificaToken, isPaciente, 
+    (req, res, next) => {
+        mostraTodosExamesPacienteController(req, res).catch(next)
+    }
 )
 
 export default router

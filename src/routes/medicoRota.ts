@@ -2,6 +2,7 @@ import express from 'express'
 import {login} from '../controllers/medicoController';
 import { verificaToken, isMedico } from '../middleware';
 import { mostraConsultaController, mostraTodasConsultasMedicoController} from '../controllers/consultaController';
+import {mostraTodosExamesMedicoController} from '../controllers/exameController'
 
 const router = express.Router();
 const app = express()
@@ -24,5 +25,12 @@ router.post('/mostraTodasConsultas',
     (req, res, next) => {
         mostraTodasConsultasMedicoController(req, res).catch(next)
     })
+
+router.get('/exame/', 
+    verificaToken, isMedico, 
+    (req, res, next) => {
+        mostraTodosExamesMedicoController(req, res).catch(next)
+    }
+)
 
 export default router

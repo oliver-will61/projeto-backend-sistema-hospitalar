@@ -5,4 +5,5 @@ export interface ExameInput {
     data: Date, 
     tipo: string,
     status: string,
+    email: string
 }
