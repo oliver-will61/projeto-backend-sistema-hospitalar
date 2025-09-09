@@ -36,16 +36,23 @@ export class Consulta {
             const queryConfig = {
                 paciente: {
                     query: `
-                        -- p = profisionais, c = consulta, u = unidade
+                        -- p = profisionais, c = consulta, u = unidade, pres = prescricao, pac = paciente
 
                         SELECT
+                        pac.nome AS nome_paciente,
                         p.nome AS nome_medico,
                         u.nome AS nome_unidade,
 
                         c.id,
                         c.uuid,
                         c.data,
-                        c.telemedicina
+                        c.telemedicina,
+                        c.status,
+
+                        pres.codigo,
+                        pres.diagnostico,
+                        pres.receita,
+                        pres.autorizacao_exame
 
                         FROM ${tabela.consultas} c 
                         
@@ -53,22 +60,34 @@ export class Consulta {
 
                         LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
 
-                        WHERE c.id_paciente = ? AND c.status = ?`, 
+                        LEFT JOIN ${tabela.prescricao} pres ON c.id = pres.id_consulta
 
-                    params: [id, "agendado"] as const
+                        LEFT JOIN ${tabela.pacientes} pac ON c.id_paciente = pac.id
+
+
+                        WHERE c.id_paciente = ?`, 
+
+                    params: [id] as const
                 },
 
                 medico: {
                     query: `
-                        -- p = profisionais, c = consulta, u = unidade
+                        -- p = profisionais, c = consulta, u = unidade, pres = prescricao, pac = paciente
 
                         SELECT
-                        p.nome AS nome_paciente,
+                        pac.nome AS nome_paciente,
+                        p.nome AS nome_medico,
                         u.nome AS nome_unidade,
 
                         c.data,
                         c.telemedicina,
-                        c.uuid
+                        c.uuid,
+                        c.status,
+
+                        pres.codigo,
+                        pres.diagnostico,
+                        pres.receita,
+                        pres.autorizacao_exame
 
                         FROM ${tabela.consultas} c 
                         
@@ -76,9 +95,13 @@ export class Consulta {
 
                         LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
 
-                        WHERE c.id_medico = ? AND c.status = ?`, 
+                        LEFT JOIN ${tabela.prescricao} pres ON c.id = pres.id_consulta
 
-                    params: [id, "agendado"] as const
+                        LEFT JOIN ${tabela.pacientes} pac ON c.id_paciente = pac.id
+
+                        WHERE c.id_medico = ?`, 
+
+                    params: [id] as const
                 }
             }
 
@@ -94,10 +117,21 @@ export class Consulta {
 
             //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
             const queryFormatada = rows.map(row => ({
-                ...row, 
-                uuid: binaryToUuidString(row.uuid),
-                telemedicina: row.telemedicina === 1 || row.telemedicina == true ? "Sim" : "Não"
 
+                nome_paciente: row.nome_paciente,
+                nome_medico: row.nome_medico,
+                nome_unidade: row.nome_unidade,
+                id: row.id,
+                uuid: binaryToUuidString(row.uuid),
+                data: row.data,
+                telemedicina: row.telemedicina === 1 || row.telemedicina == true ? "Sim" : "Não",
+                status: row.status,
+                prescricao: {
+                        codigo: row.codigo,
+                        diagnostico: row.diagnostico,
+                        receita:row.receita,
+                        autorizacao_para_exame: row.autorizacao_exame === 1 || row.autorizacao_exame == true ? true : false
+                }
             }));
                 
             return res.json({
