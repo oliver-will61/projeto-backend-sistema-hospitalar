@@ -16,7 +16,3 @@ export const mostraTodasConsultasMedicoController = async (req: Request, res: Re
 export const cancelaConsultaController = async(req: Request, res: Response) => {
     Consulta.cancela(req, res)
 }
-
-export const mostraConsultaController = async(req: Request, res: Response) => {
-    Consulta.mostraConsulta(req, res)
-}

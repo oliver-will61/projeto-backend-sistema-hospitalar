@@ -147,59 +147,6 @@ export class Consulta {
         }
     }
 
-    static async mostraConsulta(req: Request, res: Response) {
-        try {
-            const {uuid} = req.params 
-
-            const [result] = await db.execute<RowDataPacket[]>(
-            `
-                SELECT 
-                p.nome  as nome_paciente,
-                m.nome as nome_medico,
-                u.nome as nome_unidade,
-
-                c.id,
-                c.uuid,
-                c.data,
-                c.telemedicina
- 
-                FROM ${tabela.consultas} c
-                
-                LEFT JOIN ${tabela.pacientes} p ON c.id_paciente = p.id
-                LEFT JOIN ${tabela.profissionais} m ON c.id_medico = m.id
-                LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
-                
-                WHERE uuid = UNHEX(REPLACE(?, '-', ''))
-                `, 
-            [uuid]
-            )
-
-            const consulta = (result as any)[0]
-            
-            if(!consulta) {
-                return res.status(404).json({
-                    message: "UUID não encontrado"
-                })
-            }
-            
-            //principal  função é converte o uuid que está em binario para string com a função "binaryToUuidString()"
-            const consultaFormatada =  {
-                ...consulta, 
-                uuid: binaryToUuidString(consulta.uuid),
-                telemedicina: consulta.telemedicina === 1 || consulta.telemedicina == true ? "Sim" : "Não"
-            }
-         
-
-            res.status(200).json({
-                message: "Consulta Selecionada",
-                consultaData: consultaFormatada
-            })
-
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     static async marcarConsulta(req:Request, res: Response) {
 
         try {

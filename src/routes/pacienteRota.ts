@@ -1,6 +1,6 @@
 import express from 'express'
 import {cadastro, login} from '../controllers/pacienteController'
-import {marcarConsultaController, mostraConsultaController, mostraTodasConsultasPacienteController, cancelaConsultaController} from '../controllers/consultaController'
+import {marcarConsultaController, mostraTodasConsultasPacienteController, cancelaConsultaController} from '../controllers/consultaController'
 import { verificaToken, isPaciente} from '../middleware';
 import {mostraTodosExamesPacienteController} from '../controllers/exameController'
 
@@ -32,13 +32,6 @@ router.post('/mostraTodasConsultas',
     (req, res, next) => {
         mostraTodasConsultasPacienteController(req, res).catch(next)
     })
-
-router.get('/mostraConsulta/:uuid',
-    verificaToken, isPaciente,
-    (req, res, next) => {
-        mostraConsultaController(req, res).catch(next)
-    }
-)
 
 router.patch('/consulta/:uuid',
     verificaToken, isPaciente,
