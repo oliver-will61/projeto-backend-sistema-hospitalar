@@ -200,14 +200,14 @@ export class Consulta {
         }
     }
 
-    static async cancela(req: Request, res: Response){
+    static async cancela(req: Request, res: Response, tabela: string){
         try {
             const {uuid} = req.params // Ou req.body.uuid se enviar no corpo
             
             //realiza a exclusão   
             // //ResultSetHeader seria o equivalente do RowDataPacket só para o DELETE
             const [result] = await db.execute<ResultSetHeader>(
-                `UPDATE ${tabela.consultas} 
+                `UPDATE ${tabela} 
                 SET status = "cancelado" 
                 WHERE uuid = UNHEX(REPLACE(?, '-', ''))` , 
                 [uuid]

@@ -2,7 +2,7 @@ import express from 'express'
 import {cadastro, login} from '../controllers/pacienteController'
 import {marcarConsultaController, mostraTodasConsultasPacienteController, cancelaConsultaController} from '../controllers/consultaController'
 import { verificaToken, isPaciente} from '../middleware';
-import {mostraTodosExamesPacienteController} from '../controllers/exameController'
+import {mostraTodosExamesPacienteController, cancelaExame} from '../controllers/exameController'
 
 const router = express.Router();
 
@@ -45,6 +45,13 @@ router.get('/exame/',
     (req, res, next) => {
         mostraTodosExamesPacienteController(req, res).catch(next)
     }
+)
+
+router.patch('/exame/cancela/:uuid',
+    verificaToken, isPaciente,
+    (req, res, next) => {
+        cancelaExame(req, res).catch(next)
+    } 
 )
 
 export default router

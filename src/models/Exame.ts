@@ -6,10 +6,11 @@ import { UnidadeHospitalar } from "./UnidadeMedica"
 import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 import {RowDataPacket} from 'mysql2'
 import {binaryToUuidString} from '../config/database'
+import { Consulta } from "./Consulta"
 
 type TipoAcesso = 'medico' | 'paciente';
 
-export class Exame {
+export class Exame extends Consulta {
 
     static nomeTabelaExame = tabela.exame
 
