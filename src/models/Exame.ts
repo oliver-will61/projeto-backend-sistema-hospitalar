@@ -118,7 +118,8 @@ export class Exame extends Consulta {
                         e.id,
                         e.uuid,
                         e.data,
-                        e.tipo
+                        e.tipo,
+                        e.status
 
                         FROM ${tabela.exame} e 
 
@@ -144,6 +145,7 @@ export class Exame extends Consulta {
 
                         e.data,
                         e.tipo,
+                        e.status,
                         e.uuid
 
                         FROM ${tabela.exame} e 
