@@ -87,26 +87,44 @@ export class Prescricao {
         const {diagnostico, receita, requisicao_exame} = req.body as PrescricaoInput 
         const  {uuidConsulta} = req.params
 
+
+
         const [consultaRow] = await db.execute<RowDataPacket[]>(
-                `SELECT id FROM ${nomeTabelaConsulta} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
+                `SELECT id, status FROM ${nomeTabelaConsulta} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
                 [uuidConsulta]
         )
 
         if (consultaRow.length === 0) {
-            throw new Error ("Consulta não encontrada!")
+                return res.json({
+                messagem: "Consulta não encontrada!"
+            }) 
+        }
+
+        if (consultaRow[0].status != "agendado") {
+            return res.json({
+                messagem: "Consulta já realizada ou cancelada!"
+            }) 
         }
 
         const consultaId = consultaRow[0].id
 
+
         const codigoPrescricao = await Prescricao.geraCodigo(nomeTabelaPrescricao)
                 
         const [resultado] = await db.execute(
-            `
+            ` 
             INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,UUID_TO_BIN(?),?,?,?,?)`,
             [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
-        
-        return res.json({message: "Prescrição gerada com sucesso!"})
+
+        const [update] = await db.execute (
+            `UPDATE ${tabela.consulta}
+            SET status = "realizado" 
+            WHERE uuid = UNHEX(REPLACE(?, '-', ''))`,
+            [uuidConsulta]
+        )
+
+        return res.json({message: "Prescrição gerada com sucesso e consulta realizada!"})
 
 
     } catch (error) {
