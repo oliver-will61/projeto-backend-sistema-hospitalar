@@ -72,7 +72,7 @@ export class Exame {
             [idUnidadeHospitalar, idPaciente, idMedico, uuid, data, tipo, status])
 
         return res.status(201).json({
-            messagem: "Consulta agendada com sucesso!"
+            messagem: "Exame agendado com sucesso!"
         })
         
         } catch (error) {
@@ -110,7 +110,8 @@ export class Exame {
                         -- p = profisionais, c = consulta, u = unidade
 
                         SELECT
-                        p.nome AS nome_medico,
+                        p.nome AS nome_paciente,
+                        m.nome AS nome_medico,
                         u.nome AS nome_unidade,
 
                         e.id,
@@ -119,14 +120,16 @@ export class Exame {
                         e.tipo
 
                         FROM ${tabela.exame} e 
+
+                        LEFT JOIN ${tabela.pacientes} p ON e.id_paciente = p.id 
                         
-                        LEFT JOIN ${tabela.profissionais} p ON e.id_medico = p.id   
+                        LEFT JOIN ${tabela.profissionais} m ON e.id_medico = m.id   
 
                         LEFT JOIN ${tabela.unidadeHospitalar} u ON e.id_unidade_hospitalar = u.id
 
-                        WHERE e.id_paciente = ? AND e.status = ?`, 
+                        WHERE e.id_paciente = ?`, 
 
-                    params: [id, "agendado"] as const
+                    params: [id] as const
                 },
 
                 medico: {
@@ -135,6 +138,7 @@ export class Exame {
 
                         SELECT
                         p.nome AS nome_paciente,
+                        m.nome AS nome_medico,
                         u.nome AS nome_unidade,
 
                         e.data,
@@ -143,13 +147,15 @@ export class Exame {
 
                         FROM ${tabela.exame} e 
                         
-                        LEFT JOIN ${tabela.profissionais} p ON e.id_paciente = p.id   
+                        LEFT JOIN ${tabela.pacientes} p ON e.id_paciente = p.id 
+
+                        LEFT JOIN ${tabela.profissionais} m ON e.id_medico = m.id  
 
                         LEFT JOIN ${tabela.unidadeHospitalar} u ON e.id_unidade_hospitalar = u.id
 
-                        WHERE e.id_medico = ? AND e.status = ?`, 
+                        WHERE e.id_medico = ?`, 
 
-                    params: [id, "agendado"] as const
+                    params: [id] as const
                 }
             }
 

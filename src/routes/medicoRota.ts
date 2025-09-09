@@ -1,7 +1,7 @@
 import express from 'express'
 import {login} from '../controllers/medicoController';
 import { verificaToken, isMedico } from '../middleware';
-import { mostraConsultaController, mostraTodasConsultasMedicoController} from '../controllers/consultaController';
+import {mostraTodasConsultasMedicoController} from '../controllers/consultaController';
 import {mostraTodosExamesMedicoController} from '../controllers/exameController'
 
 const router = express.Router();
@@ -11,14 +11,6 @@ app.use(express.json());
 
 router.post('/login', (req, res, next) => {
     login(req, res).catch(next)});
-
-
-router.get('/mostraConsulta/:uuid', 
-    verificaToken, isMedico,
-    (req, res, next) => {
-        mostraConsultaController(req, res).catch(next)
-    }
-) 
 
 router.post('/mostraTodasConsultas',
     verificaToken,  isMedico,
