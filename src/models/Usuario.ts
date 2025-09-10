@@ -1,8 +1,9 @@
 import {Request, Response} from 'express';
-import {db} from '../config/database';
+import {db, tabela} from '../config/database';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
+import { UsuarioInput } from '../interfaces/UsuarioInput';
 
 export class Usuario {
 
@@ -116,5 +117,51 @@ export class Usuario {
             });
         }
 
+    }
+
+    static async exibeProntuario(req: Request, res: Response) {
+        try {
+            const {email} = req.params
+
+            //pega o id do paciente usando como parametro o email
+            const id = await Usuario.getId(email, tabela.pacientes) 
+
+            const [rows] = await db.execute<RowDataPacket[]>( `
+                
+                -- p = profisionais, c = consulta, u = unidade, pres = prescricao, pac = paciente
+
+                SELECT
+                pac.nome AS nome_paciente,
+                p.nome AS nome_medico,
+                u.nome AS nome_unidade,
+
+                c.id,
+                c.uuid,
+                c.data,
+                c.telemedicina,
+                c.status,
+
+                pres.codigo,
+                pres.diagnostico,
+                pres.receita,
+                pres.autorizacao_exame
+
+                FROM ${tabela.consultas} c 
+                
+                LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id   
+
+                LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
+
+                LEFT JOIN ${tabela.prescricao} pres ON c.id = pres.id_consulta
+
+                LEFT JOIN ${tabela.pacientes} pac ON c.id_paciente = pac.id
+
+                WHERE c.id_paciente = ?`, 
+
+                [id]
+            )
+        } catch {
+
+        }
     }
 }
