@@ -9,7 +9,7 @@ const app = express()
 // Este middleware é ESSENCIAL para parsear o body das requisições
 app.use(express.json());
 
-
+// marcaExame
 router.post('/:codigoPrescricao',
     verificaToken, isPaciente,
 

@@ -20,6 +20,9 @@ router.post('/login', (req, res, next) => {
     login(req, res).catch(next)
 });
 
+// CONSULTA ===========================================================
+
+// marca consulta
 router.post('/marcarConsulta',
     verificaToken, isPaciente,
 
@@ -27,12 +30,14 @@ router.post('/marcarConsulta',
         marcarConsultaController(req, res).catch(next)
     });
 
+// mostra a consulta
 router.post('/mostraTodasConsultas',
     verificaToken,  isPaciente,
     (req, res, next) => {
         mostraTodasConsultasPacienteController(req, res).catch(next)
     })
 
+// cancela a consulta    
 router.patch('/consulta/:uuid',
     verificaToken, isPaciente,
     (req, res, next) => {
@@ -40,6 +45,9 @@ router.patch('/consulta/:uuid',
     } 
 )
 
+//EXAMES ============================================================
+
+// mostra os exames
 router.get('/exame/', 
     verificaToken, isPaciente, 
     (req, res, next) => {
@@ -47,6 +55,7 @@ router.get('/exame/',
     }
 )
 
+ // cancela o exame
 router.patch('/exame/cancela/:uuid',
     verificaToken, isPaciente,
     (req, res, next) => {

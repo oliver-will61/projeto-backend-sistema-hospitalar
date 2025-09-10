@@ -79,9 +79,10 @@ export class Consulta {
                         p.nome AS nome_medico,
                         u.nome AS nome_unidade,
 
+                        c.id,
+                        c.uuid,
                         c.data,
                         c.telemedicina,
-                        c.uuid,
                         c.status,
 
                         pres.codigo,
@@ -252,5 +253,43 @@ export class Consulta {
             throw new Error ("Falha ao gerar o codigo único");
         }
     }
+
+    static async encerra(req: Request, res: Response, nomeTabela: string) {
+        try {
+            const {uuid} = req.params
+
+            // verifica se tem prescricao
+
+            const [codigo] = await db.execute<RowDataPacket[]>(
+                `SELECT codigo from ${tabela.prescricao} WHERE uuid_consulta = UNHEX(REPLACE(?, '-', ''))`, 
+                [uuid])
+
+            
+            if(codigo[0] == null) {
+                return res.status(404).json({
+                    menssage: "Por favor escrever a prescrição do exame"
+                })
+            }
+
+            const [result] = await db.execute<ResultSetHeader>(
+                `UPDATE ${nomeTabela} 
+                SET status = "realizado" 
+                WHERE uuid = UNHEX(REPLACE(?, '-', ''))` , 
+                [uuid]
+            )
+
+            return res.status(200).json({
+                menssage: "Atendimento Finalizado"
+            })
+
+        } catch(error) {
+            console.error(error)
+            return res.json({
+                menssagem: "Erro ao encerrar!"
+            })
+        } 
+    } 
 }
+
+
 

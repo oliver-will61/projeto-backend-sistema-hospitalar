@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import {Consulta} from '../models/Consulta'
+import { tabela } from '../config/database';
 
 export const marcarConsultaController = async(req: Request, res: Response) => {
     Consulta.marcarConsulta(req, res)
@@ -14,5 +15,9 @@ export const mostraTodasConsultasMedicoController = async (req: Request, res: Re
 }
 
 export const cancelaConsultaController = async(req: Request, res: Response) => {
-    Consulta.cancela(req, res)
+    Consulta.cancela(req, res, tabela.consulta)
+}
+
+export const encerraConsultaController = async(req: Request, res: Response) => {
+    Consulta.encerra(req, res, tabela.consulta)
 }

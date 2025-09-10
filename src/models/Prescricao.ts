@@ -119,13 +119,6 @@ export class Prescricao {
             [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
 
-        const [update] = await db.execute (
-            `UPDATE ${tabela.consulta}
-            SET status = "realizado" 
-            WHERE uuid = UNHEX(REPLACE(?, '-', ''))`,
-            [uuidConsulta]
-        )
-
         return res.json({message: "Prescrição gerada com sucesso e consulta realizada!"})
 
 
@@ -137,6 +130,6 @@ export class Prescricao {
         });
     }
 
-}
+    }
 
 }
