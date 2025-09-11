@@ -2,7 +2,7 @@ import express from 'express'
 import {login} from '../controllers/medicoController';
 import { verificaToken, isMedico } from '../middleware';
 import {mostraTodasConsultasMedicoController, encerraConsultaController} from '../controllers/consultaController';
-import {mostraTodosExamesMedicoController} from '../controllers/exameController'
+import {mostraTodosExamesMedicoController, cancelaExameController} from '../controllers/exameController'
 
 const router = express.Router();
 const app = express()
@@ -38,6 +38,13 @@ router.get('/exame/',
     verificaToken, isMedico, 
     (req, res, next) => {
         mostraTodosExamesMedicoController(req, res).catch(next)
+    }
+)
+
+router.put('/exame/encerrar/:uuid', 
+    verificaToken, isMedico,
+    (req, res, next) => {
+        cancelaExameController(req, res).catch(next)
     }
 )
 

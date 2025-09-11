@@ -14,6 +14,6 @@ export const mostraTodosExamesMedicoController = async(req: Request, res: Respon
     Exame.mostraTodosExames(req, res, 'medico')
 }
 
-export const cancelaExame = async(req: Request, res: Response) => {
+export const cancelaExameController = async(req: Request, res: Response) => {
     Exame.cancela(req, res, tabela.exame)
 }
