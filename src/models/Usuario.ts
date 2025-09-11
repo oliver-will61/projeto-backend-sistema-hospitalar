@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 import { UsuarioInput } from '../interfaces/UsuarioInput';
+import { error } from 'console';
 
 export class Usuario {
 
@@ -121,47 +122,58 @@ export class Usuario {
 
     static async exibeProntuario(req: Request, res: Response) {
         try {
-            const {email} = req.params
-
+            const {email} = req.body
+            
             //pega o id do paciente usando como parametro o email
             const id = await Usuario.getId(email, tabela.pacientes) 
 
             const [rows] = await db.execute<RowDataPacket[]>( `
                 
-                -- p = profisionais, c = consulta, u = unidade, pres = prescricao, pac = paciente
-
-                SELECT
-                pac.nome AS nome_paciente,
-                p.nome AS nome_medico,
-                u.nome AS nome_unidade,
-
-                c.id,
-                c.uuid,
-                c.data,
-                c.telemedicina,
-                c.status,
-
-                pres.codigo,
+            SELECT
+                -- Consulta
+                c.id AS consulta_id,
+                c.uuid AS consulta_uuid,
+                c.data AS consulta_data,
+                c.telemedicina AS consulta_telemedicina,
+                c.status AS consulta_status,
+                c.id_medico AS consulta_id_medico,
+                c.id_unidade_hospitalar AS consulta_id_unidade,
+                
+                -- Prescrição
+                pres.id AS prescricao_id,
+                pres.codigo AS prescricao_codigo,
                 pres.diagnostico,
                 pres.receita,
-                pres.autorizacao_exame
-
-                FROM ${tabela.consultas} c 
+                pres.autorizacao_exame,
                 
-                LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id   
-
-                LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
-
-                LEFT JOIN ${tabela.prescricao} pres ON c.id = pres.id_consulta
-
-                LEFT JOIN ${tabela.pacientes} pac ON c.id_paciente = pac.id
-
-                WHERE c.id_paciente = ?`, 
+                -- Exame
+                e.id AS exame_id,
+                e.data AS exame_data,
+                e.tipo AS exame_tipo,
+                e.status AS exame_status,
+                e.id_unidade_hospitalar AS exame_id_unidade,
+                
+                -- Relacionamentos (JOINs)
+                pac.nome AS paciente_nome,
+                med.nome AS medico_nome,
+                unid.nome AS unidade_nome
+                
+            FROM ${tabela.consultas} c 
+            
+            LEFT JOIN ${tabela.prescricao} pres ON c.id = pres.id_consulta
+            LEFT JOIN ${tabela.exame} e ON pres.id = e.id_prescricao
+            LEFT JOIN ${tabela.pacientes} pac ON c.id_paciente = pac.id
+            LEFT JOIN ${tabela.profissionais} med ON c.id_medico = med.id
+            LEFT JOIN ${tabela.unidadeHospitalar} unid ON c.id_unidade_hospitalar = unid.id`, 
 
                 [id]
             )
-        } catch {
-
+        } catch (error) {
+            console.error(error)
+            return res.json({
+                mensagem: "Erro ao gerar o prontuario",
+                errro: error 
+            })
         }
     }
 }
