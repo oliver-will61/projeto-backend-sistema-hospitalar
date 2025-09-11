@@ -119,7 +119,10 @@ export class Prescricao {
             [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
 
-        return res.json({message: "Prescrição gerada com sucesso e consulta realizada!"})
+        return res.json({
+            message: "Prescrição gerada com sucesso!",
+            codigo: codigoPrescricao
+        })
 
 
     } catch (error) {

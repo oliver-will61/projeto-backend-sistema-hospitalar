@@ -7,6 +7,7 @@ import  {v4 as uuidv4} from 'uuid' //biblioteca responsável por gerar os uuid
 import {RowDataPacket} from 'mysql2'
 import {binaryToUuidString} from '../config/database'
 import { Consulta } from "./Consulta"
+import { Prescricao } from "./Prescricao"
 
 type TipoAcesso = 'medico' | 'paciente';
 
@@ -20,26 +21,25 @@ export class Exame extends Consulta {
         //verifica se tem permição para realizar o exame
         const {codigoPrescricao} = req.params
 
-        const [codigo] = await db.execute<RowDataPacket[]>(`
-                SELECT codigo, autorizacao_exame FROM ${tabela.prescricao} WHERE codigo = ?`, 
+        const [prescricaoQuery] = await db.execute<RowDataPacket[]>(`
+                SELECT id, autorizacao_exame FROM ${tabela.prescricao} WHERE codigo = ?`, 
                 [codigoPrescricao])
 
-        if(codigo.length === 0) {
+        if(prescricaoQuery.length === 0) {
             return res.status(404).json({
                 mensage: "Codigo de prescrição não encontrado!"
             })
         }
 
-        console.log(codigo[0].autorizacao_exame);
-
-        if (!codigo[0].autorizacao_exame) {
+        if (!prescricaoQuery[0].autorizacao_exame) {
             return res.status(403).json({
                 menssage: "Sem autorização para marcar o exame"
             })
         }
-        
 
+        const idPrescricao = prescricaoQuery[0].id
 
+        // trabalha com  o body da requisição
         const {emailPaciente, emailMedico, unidadeHospitalar,data, tipo, status}  = req.body as ExameInput
 
         //pega o id do médico usadno como parametro o email
@@ -68,9 +68,10 @@ export class Exame extends Consulta {
         const uuid = uuidv4();
 
         
+        //inser os dados do exame no banco de dados
         const [result] = await db.execute(`
-            INSERT INTO ${Exame.nomeTabelaExame} (id_unidade_hospitalar, id_paciente, id_medico, uuid, data, tipo, status) VALUES (?,?,?,UUID_TO_BIN(?),?,?,?)`,
-            [idUnidadeHospitalar, idPaciente, idMedico, uuid, data, tipo, status])
+            INSERT INTO ${Exame.nomeTabelaExame} (id_unidade_hospitalar, id_paciente, id_medico, id_prescricao, uuid, data, tipo, status) VALUES (?,?,?,?,UUID_TO_BIN(?),?,?,?)`,
+            [idUnidadeHospitalar, idPaciente, idMedico, idPrescricao, uuid, data, tipo, status])
 
         return res.status(201).json({
             messagem: "Exame agendado com sucesso!"
