@@ -145,7 +145,6 @@ export class Consulta {
         }
     } 
 
-
     static async mostraTodasConsultas(req: Request, res: Response, acesso:TipoAcesso) {
 
         try {
@@ -165,7 +164,6 @@ export class Consulta {
         }
     }
     
-
     static async marcarConsulta(req:Request, res: Response) {
 
         try {

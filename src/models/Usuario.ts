@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 import { Consulta } from './Consulta';
+import { Exame } from './Exame';
 
 export class Usuario {
 
@@ -121,7 +122,7 @@ export class Usuario {
 
     static async exibeProntuario(req: Request, res: Response) {
         try {
-            const {email} = req.body
+            //const {email} = req.body
             
             //pega o id do paciente usando como parametro o email
             //const id = await Usuario.getId(email, tabela.pacientes) 
@@ -169,10 +170,13 @@ export class Usuario {
 
 
             const prontuario = {
-                consultas: await Consulta.mostraTodasConsultas(req, res, 'paciente')
+                consultas: await Consulta.puxaTodasConsultas(req, res, 'paciente'),
+                exames: await Exame.puxaTodosExames(req, res, 'paciente')
             }
 
-            console.log(prontuario.consultas);
+            return res.status(200).json({
+                prontuario: prontuario 
+            })
             
         } catch (error) {
             console.error(error)

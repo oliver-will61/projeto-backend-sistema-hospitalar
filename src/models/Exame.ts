@@ -85,8 +85,7 @@ export class Exame extends Consulta {
         }
     }
 
-    static async mostraTodosExames(req: Request, res: Response, acesso:TipoAcesso) {
-        
+    static async puxaTodosExames (req: Request, res: Response, acesso:TipoAcesso) {
         try {
             const {email} = req.body as ExameInput    
 
@@ -178,13 +177,29 @@ export class Exame extends Consulta {
                 ...row, 
                 uuid: binaryToUuidString(row.uuid),
             }));
-                
-            return res.json({
-                data: queryFormatada,
-                message: "Todas os exames agendados"      
+
+            return queryFormatada
+        }
+        catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                message: "Erro a realizar a consulta"
             })
+        }
+    }
+
+    static async mostraTodosExames(req: Request, res: Response, acesso:TipoAcesso) {
         
-        } catch(error) {
+        try {
+            const exames = Exame.puxaTodosExames(req, res, acesso)
+
+            return res.json({
+                data: exames,
+                message: "Todas os exames agendados"      
+            })            
+        }
+        
+        catch(error) {
             console.error(error);
             return res.status(500).json({
                 message: "Erro a realizar a consulta"
@@ -192,3 +207,4 @@ export class Exame extends Consulta {
         }
     }
 }
+
