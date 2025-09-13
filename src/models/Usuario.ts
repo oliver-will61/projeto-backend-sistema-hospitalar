@@ -169,10 +169,10 @@ export class Usuario {
 
 
             const prontuario = {
-                consultas: Consulta.mostraTodasConsultas(req, res, 'paciente')
+                consultas: await Consulta.mostraTodasConsultas(req, res, 'paciente')
             }
 
-            console.log(prontuario);
+            console.log(prontuario.consultas);
             
         } catch (error) {
             console.error(error)

@@ -12,8 +12,8 @@ type TipoAcesso = 'medico' | 'paciente';
 export class Consulta {
     private nomeTabelaConsulta = tabela.consulta 
 
-    static async mostraTodasConsultas(req: Request, res: Response, acesso:TipoAcesso) {
-        
+    static async puxaTodasConsultas(req: Request, res: Response, acesso:TipoAcesso) {
+
         try {
             const {email} = req.body as ConsultaInput    
 
@@ -134,19 +134,37 @@ export class Consulta {
                         autorizacao_para_exame: row.autorizacao_exame === 1 || row.autorizacao_exame == true ? true : false
                 }
             }));
-                
-            return res.json({
-                data: queryFormatada,
-                message: "Todas as consultas agendadas"      
-            })
-        
-        } catch(error) {
+
+            return queryFormatada
+        }   
+        catch(error) {
             console.error(error);
             return res.status(500).json({
-                message: "Erro a realizar a consulta"
+                message: "Erro ao puxar as consultas"
+            })
+        }
+    } 
+
+
+    static async mostraTodasConsultas(req: Request, res: Response, acesso:TipoAcesso) {
+
+        try {
+            const consultas = await Consulta.puxaTodasConsultas(req, res, acesso)  
+
+            return res.json({
+                data: consultas,
+                message: "Todas as consultas agendadas"      
+            })
+        }
+
+        catch(error) {
+            console.error(error);
+            return res.status(500).json({
+                message: "Erro a realizar ao mostrar as consultas"
             })
         }
     }
+    
 
     static async marcarConsulta(req:Request, res: Response) {
 
