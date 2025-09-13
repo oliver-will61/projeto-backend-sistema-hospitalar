@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 import { Consulta } from './Consulta';
 import { Exame } from './Exame';
+import { error } from 'console';
 
 export class Usuario {
 
@@ -122,53 +123,6 @@ export class Usuario {
 
     static async exibeProntuario(req: Request, res: Response) {
         try {
-            //const {email} = req.body
-            
-            //pega o id do paciente usando como parametro o email
-            //const id = await Usuario.getId(email, tabela.pacientes) 
-
-            // const [rows] = await db.execute<RowDataPacket[]>( `
-                
-            //     -- p = profisionais, c = consulta, u = unidade, pres = prescricao, pac = paciente
-
-            //     SELECT
-            //     pac.nome AS nome_paciente,
-            //     p.nome AS nome_medico,
-            //     u.nome AS nome_unidade,
-
-            //     c.id,
-            //     c.uuid,
-            //     c.data,
-            //     c.telemedicina,
-            //     c.status,
-
-            //     pres.codigo,
-            //     pres.diagnostico,
-            //     pres.receita,
-            //     pres.autorizacao_exame,
-
-            //     e.data,
-            //     e.tipo,
-            //     e.status
-
-            //     FROM ${tabela.consultas} c 
-                
-            //     LEFT JOIN ${tabela.profissionais} p ON c.id_medico = p.id   
-
-            //     LEFT JOIN ${tabela.unidadeHospitalar} u ON c.id_unidade_hospitalar = u.id
-
-            //     LEFT JOIN ${tabela.prescricao} pres ON c.id = pres.id_consulta
-
-            //     LEFT JOIN ${tabela.pacientes} pac ON c.id_paciente = pac.id
-
-            //     LEFT JOIN ${tabela.exame} e ON e.id_prescricao = pres.id
-
-            //     WHERE c.id_paciente = ?`, 
-
-            //     [id]
-            // )
-
-
             const prontuario = {
                 consultas: await Consulta.puxaTodasConsultas(req, res, 'paciente'),
                 exames: await Exame.puxaTodosExames(req, res, 'paciente')
@@ -186,4 +140,46 @@ export class Usuario {
             })
         }
     }
+
+    static async acessoTeleconsulta (req: Request, res: Response) {
+        try {
+            const {uuidConsulta} = req.params 
+
+             const [row] = await db.execute<RowDataPacket[]>(`
+
+                SELECT telemedicina status from ${tabela.consulta} WHERE uuid = UUID_TO_BIN(?)`, 
+                    [uuidConsulta]
+            )
+
+            if(row.length === 0) {
+                return res.status(404).json({
+                    mensage: "Consulta não encontrada!"
+                })
+            }
+
+            if(row[0].status != "agendado"){
+                return res.status(401).json({
+                    mensage: "Consulta não está mais disponível!"
+                })         
+            }
+
+            if(row[0].telemedica != 1 || row[0].telemedica != true) {
+                return res.status(401).json({
+                    mensage: "Consulta não é uma teleconsulta!"
+                })            
+            }
+
+            return res.status(200).json({
+                mensagem: "conectando na teleconsulta..."
+            }) 
+        }
+
+        catch(error) {
+            console.log(error);
+            return res.status(501).json({
+                mensagem: "Erro ao entrar na teleconsulta!"
+            })
+        }
+    }
+    //validar se é uma teleconsulta
 }

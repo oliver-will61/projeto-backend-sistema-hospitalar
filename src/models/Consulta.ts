@@ -191,7 +191,7 @@ export class Consulta {
             )
 
             if (row.length > 0) {                
-                    throw new Error ("Já existe um consulta marcada para o horario escolhido!")
+                    throw new Error ("Já existe uma consulta marcada para o horario escolhido!")
              }
 
              //Gera o UUID
