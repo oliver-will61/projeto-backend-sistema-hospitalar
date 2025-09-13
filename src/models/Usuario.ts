@@ -3,8 +3,6 @@ import {db, tabela} from '../config/database';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
-import { UsuarioInput } from '../interfaces/UsuarioInput';
-import { error } from 'console';
 import { Consulta } from './Consulta';
 
 export class Usuario {
@@ -126,7 +124,7 @@ export class Usuario {
             const {email} = req.body
             
             //pega o id do paciente usando como parametro o email
-            const id = await Usuario.getId(email, tabela.pacientes) 
+            //const id = await Usuario.getId(email, tabela.pacientes) 
 
             // const [rows] = await db.execute<RowDataPacket[]>( `
                 
