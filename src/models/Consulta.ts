@@ -305,6 +305,47 @@ export class Consulta {
             })
         } 
     } 
+
+    static async acessoTeleconsulta (req: Request, res: Response) {
+        try {
+            const {uuidConsulta} = req.params 
+
+             const [row] = await db.execute<RowDataPacket[]>(`
+
+                SELECT telemedicina status from ${tabela.consulta} WHERE uuid = UUID_TO_BIN(?)`, 
+                    [uuidConsulta]
+            )
+
+            if(row.length === 0) {
+                return res.status(404).json({
+                    mensage: "Consulta não encontrada!"
+                })
+            }
+
+            if(row[0].status != "agendado"){
+                return res.status(401).json({
+                    mensage: "Consulta não está mais disponível!"
+                })         
+            }
+
+            if(row[0].telemedica != 1 || row[0].telemedica != true) {
+                return res.status(401).json({
+                    mensage: "Consulta não é uma teleconsulta!"
+                })            
+            }
+
+            return res.status(200).json({
+                mensagem: "conectando na teleconsulta..."
+            }) 
+        }
+
+        catch(error) {
+            console.log(error);
+            return res.status(501).json({
+                mensagem: "Erro ao entrar na teleconsulta!"
+            })
+        }
+    }    
 }
 
 
