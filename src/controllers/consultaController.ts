@@ -19,7 +19,7 @@ export const cancelaConsultaController = async(req: Request, res: Response) => {
 }
 
 export const encerraConsultaController = async(req: Request, res: Response) => {
-    Consulta.encerra(req, res, tabela.consulta)
+    Consulta.encerra(req, res, tabela.consulta, 'consulta')
 }
 
 export const teleconsultaController = async(req: Request, res: Response) => {

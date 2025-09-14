@@ -270,22 +270,27 @@ export class Consulta {
         }
     }
 
-    static async encerra(req: Request, res: Response, nomeTabela: string) {
+    static async encerra(req: Request, res: Response, nomeTabela: string, tipoDoAtendimento: string) {
         try {
+
             const {uuid} = req.params
 
-            // verifica se tem prescricao
+            if(tipoDoAtendimento == 'consulta') {
 
-            const [codigo] = await db.execute<RowDataPacket[]>(
-                `SELECT codigo from ${tabela.prescricao} WHERE uuid_consulta = UNHEX(REPLACE(?, '-', ''))`, 
-                [uuid])
+                // verifica se tem prescricao
 
-            
-            if(codigo[0] == null) {
-                return res.status(404).json({
-                    menssage: "Por favor escrever a prescrição do exame"
-                })
+                const [codigo] = await db.execute<RowDataPacket[]>(
+                    `SELECT codigo from ${tabela.prescricao} WHERE uuid_consulta = UNHEX(REPLACE(?, '-', ''))`, 
+                    [uuid])
+
+                
+                if(codigo[0] == null) {
+                    return res.status(404).json({
+                        menssage: "Por favor escrever a prescrição do exame"
+                    })
+                }
             }
+
 
             const [result] = await db.execute<ResultSetHeader>(
                 `UPDATE ${nomeTabela} 

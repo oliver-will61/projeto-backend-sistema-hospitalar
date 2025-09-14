@@ -1,7 +1,7 @@
 import express from 'express'
 import {marcaExameController} from '../controllers/exameController'
-import {mostraTodosExamesPacienteController, cancelaExameController} from '../controllers/exameController'
-import { verificaToken, isPaciente} from '../middleware';
+import {mostraTodosExamesPacienteController, cancelaExameController, mostraTodosExamesMedicoController, encerraExameController} from '../controllers/exameController'
+import { verificaToken, isPaciente, isMedico} from '../middleware';
 
 const router = express.Router();
 
@@ -20,10 +20,10 @@ router.post('/:codigoPrescricao',
 );
 
 
-// ## ROTAS DO  PACIENTE ## =================================================================================================================================
+// ## ROTAS DO PACIENTE ## =================================================================================================================================
 
 
-// mostra os exames
+// mostra os exames paciente
 router.get('/paciente', 
     verificaToken, isPaciente, 
     (req, res, next) => {
@@ -31,12 +31,30 @@ router.get('/paciente',
     }
 )
 
-// cancela o exame
+// cancela o exame, apenas o paciente pode cancelar os exames
 router.put('/paciente/:uuid',
     verificaToken, isPaciente,
     (req, res, next) => {
         cancelaExameController(req, res).catch(next)
     } 
+)
+
+// ## ROTAS DO MEDICO ## =================================================================================================================================
+
+// mostra exame medico
+router.get('/medico', 
+    verificaToken, isMedico, 
+    (req, res, next) => {
+        mostraTodosExamesMedicoController(req, res).catch(next)
+    }
+)
+
+// encerra os examas, apenas o medico pode encerrar os exames
+router.put('/medico/:uuid', 
+    verificaToken, isMedico,
+    (req, res, next) => {
+        encerraExameController(req, res).catch(next)
+    }
 )
 
 export default router

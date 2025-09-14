@@ -13,20 +13,20 @@ router.post('/login', (req, res, next) => {
 
 //EXAMES ============================================================
 
-// mostra exame
-router.get('/exame/', 
-    verificaToken, isMedico, 
-    (req, res, next) => {
-        mostraTodosExamesMedicoController(req, res).catch(next)
-    }
-)
+// // mostra exame
+// router.get('/exame/', 
+//     verificaToken, isMedico, 
+//     (req, res, next) => {
+//         mostraTodosExamesMedicoController(req, res).catch(next)
+//     }
+// )
 
-router.put('/exame/encerrar/:uuid', 
-    verificaToken, isMedico,
-    (req, res, next) => {
-        cancelaExameController(req, res).catch(next)
-    }
-)
+// router.put('/exame/encerrar/:uuid', 
+//     verificaToken, isMedico,
+//     (req, res, next) => {
+//         cancelaExameController(req, res).catch(next)
+//     }
+// )
 
 
 export default router
