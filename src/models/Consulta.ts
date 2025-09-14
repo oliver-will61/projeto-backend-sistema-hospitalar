@@ -312,30 +312,33 @@ export class Consulta {
 
              const [row] = await db.execute<RowDataPacket[]>(`
 
-                SELECT telemedicina status from ${tabela.consulta} WHERE uuid = UUID_TO_BIN(?)`, 
+                SELECT telemedicina, status from ${tabela.consulta} WHERE uuid = UUID_TO_BIN(?)`, 
                     [uuidConsulta]
             )
 
+            //verifica se encontrou a consulta
             if(row.length === 0) {
                 return res.status(404).json({
                     mensage: "Consulta não encontrada!"
                 })
-            }
+            }            
 
+            // verifica se a consulta já foi atendida pelo status
             if(row[0].status != "agendado"){
                 return res.status(401).json({
                     mensage: "Consulta não está mais disponível!"
                 })         
             }
 
-            if(row[0].telemedica != 1 || row[0].telemedica != true) {
+            //verifica se é a consulta é uma teleconsulta
+            if(row[0].telemedicina != 1 || row[0].telemedicina != true) {
                 return res.status(401).json({
                     mensage: "Consulta não é uma teleconsulta!"
                 })            
             }
 
             return res.status(200).json({
-                mensagem: "conectando na teleconsulta..."
+                mensagem: "conectando teleconsulta..."
             }) 
         }
 
