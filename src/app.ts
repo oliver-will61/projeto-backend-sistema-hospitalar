@@ -21,14 +21,13 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(express.json()); 
 
-app.use('/page', pagesRota)
 app.use('/paciente', pacienteRota);
 app.use('/medico', medicoRota)
-app.use('/adm', admRota)
+app.use('/consulta', consultaRota)
 app.use('/prescricao', prescricaoRota)
 app.use('/exame', exameRota)
-app.use('/consulta', consultaRota)
 app.use('/prontuario', prontuarioRota)
-
+app.use('/adm', admRota)
+app.use('/page', pagesRota)
 
 export default app;
