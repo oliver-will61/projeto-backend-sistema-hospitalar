@@ -1,7 +1,8 @@
 import express from 'express'
 import { verificaToken} from '../middleware';
-import {teleconsultaController, marcarConsultaController, mostraTodasConsultasPacienteController, cancelaConsultaController} from '../controllers/consultaController'
-import { isPaciente } from '../middleware';
+import {teleconsultaController, marcarConsultaController, mostraTodasConsultasPacienteController, 
+    cancelaConsultaController, mostraTodasConsultasMedicoController, encerraConsultaController} from '../controllers/consultaController'
+import { isPaciente, isMedico } from '../middleware';
 
 
 const router = express.Router();
@@ -12,7 +13,7 @@ const app = express()
 app.use(express.json());
 
 
-// ## ROTAS PARA O PACIENTE ##
+// ## ROTAS PARA O PACIENTE ## ====================================================================
 // marca consulta, apenas o paciente pode marcar a consulta
 router.post('/',
     verificaToken, isPaciente,
@@ -21,7 +22,7 @@ router.post('/',
         marcarConsultaController(req, res).catch(next)
     });
 
-// mostras as consultas do paciente
+// mostra as consultas do paciente
 router.get('/paciente',
     verificaToken,  isPaciente,
     (req, res, next) => {
@@ -34,6 +35,24 @@ router.put('/paciente/:uuid',
     (req, res, next) => {
         cancelaConsultaController(req, res).catch(next)
     } 
+)
+
+// ## ROTAS PARA O MEDICO =======================================================================
+
+// mostra consultas
+router.get('/medico',
+    verificaToken,  isMedico,
+    (req, res, next) => {
+        mostraTodasConsultasMedicoController(req, res).catch(next)
+    }
+)
+
+// encerra consulta
+router.put('/medico/:uuid', 
+    verificaToken, isMedico,
+    (req, res, next) => {
+        encerraConsultaController(req, res).catch(next)
+    }
 )
 
 

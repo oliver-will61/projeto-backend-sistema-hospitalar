@@ -12,25 +12,6 @@ app.use(express.json());
 router.post('/login', (req, res, next) => {
     login(req, res).catch(next)});
 
-// CONSULTA ===========================================================
-
-// mostra consultas
-router.post('/mostraTodasConsultas',
-    verificaToken,  isMedico,
-    (req, res, next) => {
-        mostraTodasConsultasMedicoController(req, res).catch(next)
-    }
-)
-
-
-// encerra consulta
-router.patch('/consulta/encerar/:uuid', 
-    verificaToken, isMedico,
-    (req, res, next) => {
-        encerraConsultaController(req, res).catch(next)
-    }
-)
-
 //EXAMES ============================================================
 
 // mostra exame
