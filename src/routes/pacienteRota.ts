@@ -20,47 +20,4 @@ router.post('/login', (req, res, next) => {
     login(req, res).catch(next)
 });
 
-// CONSULTA ===========================================================
-
-// marca consulta
-router.post('/marcarConsulta',
-    verificaToken, isPaciente,
-
-    (req, res, next) => {
-        marcarConsultaController(req, res).catch(next)
-    });
-
-// mostra a consulta
-router.post('/mostraTodasConsultas',
-    verificaToken,  isPaciente,
-    (req, res, next) => {
-        mostraTodasConsultasPacienteController(req, res).catch(next)
-    })
-
-// cancela a consulta    
-router.patch('/consulta/:uuid',
-    verificaToken, isPaciente,
-    (req, res, next) => {
-        cancelaConsultaController(req, res).catch(next)
-    } 
-)
-
-//EXAMES ============================================================
-
-// mostra os exames
-router.get('/exame/', 
-    verificaToken, isPaciente, 
-    (req, res, next) => {
-        mostraTodosExamesPacienteController(req, res).catch(next)
-    }
-)
-
- // cancela o exame
-router.patch('/exame/cancela/:uuid',
-    verificaToken, isPaciente,
-    (req, res, next) => {
-        cancelaExameController(req, res).catch(next)
-    } 
-)
-
 export default router

@@ -1,7 +1,6 @@
 import express from 'express'
 import {login} from '../controllers/medicoController';
 import { verificaToken, isMedico } from '../middleware';
-import {mostraTodasConsultasMedicoController, encerraConsultaController} from '../controllers/consultaController';
 import {mostraTodosExamesMedicoController, cancelaExameController} from '../controllers/exameController'
 
 const router = express.Router();

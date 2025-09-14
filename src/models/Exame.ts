@@ -191,8 +191,8 @@ export class Exame extends Consulta {
     static async mostraTodosExames(req: Request, res: Response, acesso:TipoAcesso) {
         
         try {
-            const exames = Exame.puxaTodosExames(req, res, acesso)
-
+            const exames = await Exame.puxaTodosExames(req, res, acesso)
+            
             return res.json({
                 data: exames,
                 message: "Todas os exames agendados"      
