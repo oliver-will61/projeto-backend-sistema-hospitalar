@@ -1,11 +1,12 @@
 import {Request, Response} from 'express';
 import { Usuario } from "./Usuario";
-import {db} from '../config/database';
+import {db, tabela} from '../config/database';
 import bcrypt from 'bcrypt';
 import {MedicoInput} from "../interfaces/MedicoInput" //interface
-import {AdmInput} from "../interfaces/AdmInput" //interface
+import {AdmInput, AdmEstoque} from "../interfaces/AdmInput" //interface
 import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
 import { UnidadeHospitalar } from './UnidadeMedica';
+import {geraCodigoNumerico} from '../config/database'
 
 export class Adm extends Usuario {
     constructor(
@@ -87,8 +88,6 @@ export class Adm extends Usuario {
                 nome, cnpj, endereco, numeroEndereco, bairro, estado, cep
             } = req.body as UnidadeHospitalarInput
 
-            console.log(JSON.stringify(req.body.numeroUnidade));
-
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (nome, cnpj, endereco, numero_endereco, bairro, estado, cep) VALUES (?,?,?,?,?,?,?)`,
                 [nome, cnpj, endereco, numeroEndereco, bairro, estado, cep]
@@ -106,5 +105,31 @@ export class Adm extends Usuario {
                 error: (error as Error).message
             })
         }
+    }
+
+    static async cadastraNovosItensEstoque(req: Request, res: Response) {
+        try {
+
+            
+            const codigo = await geraCodigoNumerico(tabela.estoque, 'codigo_item', 6)
+
+            const {nomeItem, quantidade, id_unidade_hospitalar, fornecedor} = req.body as AdmEstoque
+            
+            const [resultado] = await db.execute(`
+                INSERT INTO (nome, codigo_item, quantidade, fornecedor, id_unidade_hospitalar) VALUES (?,?,?,?,?)`,
+                [nomeItem, codigo, quantidade, id_unidade_hospitalar, fornecedor]) 
+        }
+
+        catch (error){
+            console.error(error)
+                return res.status(501).json({
+                    mensagem: "Erro ao cadastrar o item"
+            })
+        }
+    }
+
+
+    static async reporEstoque(){
+
     }
 }

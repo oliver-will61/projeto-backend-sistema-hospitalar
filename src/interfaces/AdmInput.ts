@@ -5,3 +5,10 @@ export interface AdmInput extends UsuarioInput {
     is_adm: boolean
     nomeUnidadeHospitalar: string
 }
+
+export interface AdmEstoque {
+    nomeItem: string,
+    quantidade: number,
+    fornecedor: string,
+    id_unidade_hospitalar: number
+}
