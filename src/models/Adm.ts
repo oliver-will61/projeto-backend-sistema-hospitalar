@@ -176,4 +176,31 @@ export class Adm extends Usuario {
             })
         }
     }
+
+    static async mostraEstoque (req: Request, res: Response) {
+        try {
+
+            const [rows] = await db.execute<RowDataPacket[]>(`
+                SELECT * FROM ${tabela.estoque}`
+            )
+
+            if(rows.length === 0) {
+                res.status(404).json({
+                    mensagem: "Estoque não encontrado!"
+                })
+            }
+
+            return res.status(200).json({
+                estoque: rows
+            })
+
+        } 
+
+        catch (error) {
+            console.error(error)
+            res.status(501).json({
+                mensagem: "Erro ao mostra o estoque"
+            })
+        }
+    }
 }
