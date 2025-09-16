@@ -50,7 +50,7 @@ export async function geraCodigoNumerico(nomeTabela: string, nomeColuna: string,
             const codigo = geradorDeCodigo()
 
             const [row] = await db.execute<RowDataPacket[]>(`
-                SELECT ${nomeColuna} FROM ${nomeTabela} WHERE codigo = ?`,
+                SELECT ${nomeColuna} FROM ${nomeTabela} WHERE ${nomeColuna} = ?`,
             [codigo])
 
             if(row.length === 0) {

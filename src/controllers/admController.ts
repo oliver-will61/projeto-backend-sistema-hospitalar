@@ -20,3 +20,7 @@ export const cadastroMedico =  async (req: Request, res: Response) => {
 export const controllerCadastroUnidade = async (req: Request, res: Response) => {
     Adm.cadastroUnidade(req, res, 'unidade_hospitalar')
 }
+
+export const controllerCadastraNovosItensEstoque = async (req: Request, res: Response) => {
+    Adm.cadastraNovosItensEstoque(req, res)
+}

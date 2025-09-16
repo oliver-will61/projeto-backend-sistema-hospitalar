@@ -10,5 +10,5 @@ export interface AdmEstoque {
     nomeItem: string,
     quantidade: number,
     fornecedor: string,
-    id_unidade_hospitalar: number
+    idUnidadeHospitalar: number
 }

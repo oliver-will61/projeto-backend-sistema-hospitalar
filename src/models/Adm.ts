@@ -110,26 +110,51 @@ export class Adm extends Usuario {
     static async cadastraNovosItensEstoque(req: Request, res: Response) {
         try {
 
-            
             const codigo = await geraCodigoNumerico(tabela.estoque, 'codigo_item', 6)
 
-            const {nomeItem, quantidade, id_unidade_hospitalar, fornecedor} = req.body as AdmEstoque
+            const {nomeItem, quantidade, fornecedor, idUnidadeHospitalar} = req.body as AdmEstoque
             
             const [resultado] = await db.execute(`
-                INSERT INTO (nome, codigo_item, quantidade, fornecedor, id_unidade_hospitalar) VALUES (?,?,?,?,?)`,
-                [nomeItem, codigo, quantidade, id_unidade_hospitalar, fornecedor]) 
+                INSERT INTO ${tabela.estoque} (nome, codigo_item, quantidade, fornecedor, id_unidade_hospitalar) VALUES (?,?,?,?,?)`,
+                [nomeItem, codigo, quantidade, fornecedor, idUnidadeHospitalar]) 
+
+            return res.status(200).json({
+                mensagem: "Item cadastra com sucesso",
+                codigoDoItem: codigo
+            })
         }
 
         catch (error){
             console.error(error)
                 return res.status(501).json({
-                    mensagem: "Erro ao cadastrar o item"
+                    mensagem: "Erro ao cadastrar o item",
+                    error: error
             })
         }
     }
 
 
-    static async reporEstoque(){
+    // static async reporEstoque(){
+    //     try {
 
-    }
+    //         const {codigoItem} = req.body as AdmEstoque
+            
+    //         const [resultado] = await db.execute(`
+    //             INSERT INTO ${tabela.estoque} (nome, codigo_item, quantidade, fornecedor, id_unidade_hospitalar) VALUES (?,?,?,?,?)`,
+    //             [nomeItem, codigo, quantidade, fornecedor, idUnidadeHospitalar]) 
+
+    //         return res.status(200).json({
+    //             mensagem: "Item cadastra com sucesso",
+    //             codigoDoItem: codigo
+    //         })
+    //     }
+
+    //     catch (error){
+    //         console.error(error)
+    //             return res.status(501).json({
+    //                 mensagem: "Erro ao cadastrar o item",
+    //                 error: error
+    //         })
+    //     }
+    // }
 }
