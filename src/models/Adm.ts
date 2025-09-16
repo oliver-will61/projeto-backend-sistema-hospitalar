@@ -7,6 +7,7 @@ import {AdmInput, AdmEstoque} from "../interfaces/AdmInput" //interface
 import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
 import { UnidadeHospitalar } from './UnidadeMedica';
 import {geraCodigoNumerico} from '../config/database'
+import { RowDataPacket, ResultSetHeader } from 'mysql2';
 
 export class Adm extends Usuario {
     constructor(
@@ -134,27 +135,45 @@ export class Adm extends Usuario {
     }
 
 
-    // static async reporEstoque(){
-    //     try {
+    static async reporEstoque(req: Request, res: Response){
+        try {
 
-    //         const {codigoItem} = req.body as AdmEstoque
+            const {codigoItem} = req.params
             
-    //         const [resultado] = await db.execute(`
-    //             INSERT INTO ${tabela.estoque} (nome, codigo_item, quantidade, fornecedor, id_unidade_hospitalar) VALUES (?,?,?,?,?)`,
-    //             [nomeItem, codigo, quantidade, fornecedor, idUnidadeHospitalar]) 
+            // verifica se o código existe
+            
+            const [row] = await db.execute<RowDataPacket[]>(`
+                    SELECT codigo_item FROM ${tabela.estoque} WHERE codigo_item = ?`, 
+                    [codigoItem])
 
-    //         return res.status(200).json({
-    //             mensagem: "Item cadastra com sucesso",
-    //             codigoDoItem: codigo
-    //         })
-    //     }
+            if(row.length === 0) {
+                return res.status(404).json({
+                    menssagem: "Codigo não encontrado!"
+                })
+            }
 
-    //     catch (error){
-    //         console.error(error)
-    //             return res.status(501).json({
-    //                 mensagem: "Erro ao cadastrar o item",
-    //                 error: error
-    //         })
-    //     }
-    // }
+            // insere os novos items
+
+            const {quantidade} = req.body as AdmEstoque
+
+            const [resultado] = await db.execute<ResultSetHeader>(`
+                UPDATE ${tabela.estoque} 
+                SET quantidade = quantidade + ?  
+                WHERE codigo_item = ?`, 
+                [quantidade, codigoItem]
+            ) 
+
+            return res.status(200).json({
+                mensagem: "Item reposto"
+            })
+        }
+
+        catch (error){
+            console.error(error)
+                return res.status(501).json({
+                    mensagem: "Erro ao cadastrar o item",
+                    error: error
+            })
+        }
+    }
 }
