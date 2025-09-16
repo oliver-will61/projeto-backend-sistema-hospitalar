@@ -192,7 +192,7 @@ export class Adm extends Usuario {
 
             return res.status(200).json({
                 estoque: rows
-            })
+            }) 
 
         } 
 
