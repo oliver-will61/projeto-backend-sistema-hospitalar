@@ -1,5 +1,6 @@
 import express from 'express'
-import {login, cadastroAdm, cadastroMedico, controllerCadastroUnidade, controllerCadastraNovosItensEstoque} from '../controllers/admController';
+import {login, cadastroAdm, cadastroMedico, controllerCadastroUnidade, 
+    controllerCadastraNovosItensEstoque, controllerReporEstoque} from '../controllers/admController';
 import {verificaToken, isAdmin} from "../middleware"
 
 const router = express.Router();
@@ -44,5 +45,16 @@ router.post('/estoque',
         controllerCadastraNovosItensEstoque(req, res).catch(next)
     }
 )
+
+
+router.put('/estoque/:codigoItem', 
+    verificaToken,
+    isAdmin,
+    (req, res, next ) => {
+        controllerReporEstoque(req, res).catch(next)
+    }
+)
+
+
 
 export default router

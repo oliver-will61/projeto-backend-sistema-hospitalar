@@ -24,3 +24,7 @@ export const controllerCadastroUnidade = async (req: Request, res: Response) => 
 export const controllerCadastraNovosItensEstoque = async (req: Request, res: Response) => {
     Adm.cadastraNovosItensEstoque(req, res)
 }
+
+export const controllerReporEstoque = async (req: Request, res: Response) => {    
+    Adm.reporEstoque(req, res)
+}
