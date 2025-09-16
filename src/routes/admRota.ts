@@ -1,6 +1,6 @@
 import express from 'express'
 import {login, cadastroAdm, cadastroMedico, controllerCadastroUnidade, 
-    controllerCadastraNovosItensEstoque, controllerReporEstoque} from '../controllers/admController';
+    controllerCadastraNovosItensEstoque, controllerReporEstoque, controllerMostraEstoque} from '../controllers/admController';
 import {verificaToken, isAdmin} from "../middleware"
 
 const router = express.Router();
@@ -54,6 +54,16 @@ router.put('/estoque/:codigoItem',
         controllerReporEstoque(req, res).catch(next)
     }
 )
+
+router.get('/estoque', 
+    verificaToken,
+    isAdmin,
+    (req, res, next ) => {
+        controllerMostraEstoque(req, res).catch(next)
+    }
+)
+
+
 
 
 

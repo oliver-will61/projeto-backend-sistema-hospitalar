@@ -12,7 +12,7 @@ export const cadastroAdm =  async (req: Request, res: Response) => {
 };
 
 export const cadastroMedico =  async (req: Request, res: Response) => { 
-    
+
     Adm.cadastroMedico(req, res, 'profissional');
     
 };
@@ -27,4 +27,8 @@ export const controllerCadastraNovosItensEstoque = async (req: Request, res: Res
 
 export const controllerReporEstoque = async (req: Request, res: Response) => {    
     Adm.reporEstoque(req, res)
+}
+
+export const controllerMostraEstoque = async (req: Request, res: Response) => {
+    Adm.mostraEstoque(req, res)
 }
