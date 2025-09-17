@@ -25,7 +25,8 @@ export const tabela = {
     prescricao: "prescricao",
     exame: "exames",
     consulta: "consultas",
-    estoque: "estoque"
+    estoque: "estoque",
+    movimentacaoFinanceira: "movimentacoes_financeiras"
 } as const //garante a tipagem estatica
 
 //função para conveter BINARY16 para UUID string
