@@ -9,6 +9,7 @@ import { UnidadeHospitalar } from './UnidadeMedica';
 import {geraCodigoNumerico} from '../config/database'
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { error } from 'console';
+import { stat } from 'fs';
 
 export class Adm extends Usuario {
     constructor(
@@ -207,7 +208,7 @@ export class Adm extends Usuario {
 
     static async mostraRelatorioFinanceira (req: Request, res: Response) {
 
-        async function  getStatus (req: Request, res: Response, status: string) {
+        async function  getHistoricoStatus (res: Response, status: string) {
 
             try {
                 const [rows] = await db.execute<RowDataPacket[]>(`
@@ -219,6 +220,8 @@ export class Adm extends Usuario {
                         mensagem: "nenhum resultado foi encontrado verifique o parametro da função"
                     })
                 }
+
+                return rows
             }
 
             catch {
@@ -227,20 +230,61 @@ export class Adm extends Usuario {
                     error: error
                 })
             }
-            const [rows] = db.execute(`
-
-            `)
         } 
 
+        async function getValorTotalStatus (res: Response, status: string){
+            try {
+
+                const [rows] = await db.execute<RowDataPacket[]>(`
+                
+                    SELECT SUM(valor) AS total FROM ${tabela.movimentacaoFinanceira} WHERE status = ?`,
+                        [status])
+
+                if (rows.length ===0 ){
+                    return res.status(404).json({
+                        mensagem: "status não encontrado, impossivel fazer a soma!"
+                    })
+                }
+                
+                return rows
+            } 
+
+            catch(error) {
+                console.error(error)
+                return res.status(500).json({
+                    mensagem:  "Erro ao realizar a soma dos totais"
+                })
+            }
+        }
+
         try {
-            const [rows] = db.execute(`
-                SELECT FROM     
-            `)
+
+            const relatorio = {
+                pendente: {
+                    itens: getHistoricoStatus(res, "pendente"),
+                    total: getValorTotalStatus(res, "pendente")
+                }, 
+
+                cancelado: {
+                    itens: getHistoricoStatus(res, "cancelado"),
+                    total: getValorTotalStatus(res, "cancelado")
+                },
+
+                pago: {
+                    itens: getHistoricoStatus(res, "pago"),
+                    total: getValorTotalStatus(res, "pago")
+                } 
+            }
+
+            return res.status(200).json({
+                mensagem: "Relatorio gerado com sucesso!",
+                data: relatorio
+            })
         }
 
         catch (error) {
             return res.status(500).json({
-                mensagem: "Erro ao enviar o relatorio financeiro",
+                mensagem: "Erro ao gerar o relatorio financeiro",
                 erro: error
             })
         }
