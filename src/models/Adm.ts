@@ -8,6 +8,7 @@ import {UnidadeHospitalarInput} from "../interfaces/UnidadeHospitalarInput"
 import { UnidadeHospitalar } from './UnidadeMedica';
 import {geraCodigoNumerico} from '../config/database'
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
+import { error } from 'console';
 
 export class Adm extends Usuario {
     constructor(
@@ -200,6 +201,47 @@ export class Adm extends Usuario {
             console.error(error)
             res.status(501).json({
                 mensagem: "Erro ao mostra o estoque"
+            })
+        }
+    }
+
+    static async mostraRelatorioFinanceira (req: Request, res: Response) {
+
+        async function  getStatus (req: Request, res: Response, status: string) {
+
+            try {
+                const [rows] = await db.execute<RowDataPacket[]>(`
+                    SELECT * FROM ${tabela.movimentacaoFinanceira} WHERE = ?
+                `, [status])
+                
+                if (rows.length === 0) {
+                    return res.status(404).json({
+                        mensagem: "nenhum resultado foi encontrado verifique o parametro da função"
+                    })
+                }
+            }
+
+            catch {
+                return res.status(500).json({
+                    mensagem: "Erro ao buscar pelo status financeiro",
+                    error: error
+                })
+            }
+            const [rows] = db.execute(`
+
+            `)
+        } 
+
+        try {
+            const [rows] = db.execute(`
+                SELECT FROM     
+            `)
+        }
+
+        catch (error) {
+            return res.status(500).json({
+                mensagem: "Erro ao enviar o relatorio financeiro",
+                erro: error
             })
         }
     }
