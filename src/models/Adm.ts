@@ -9,7 +9,6 @@ import { UnidadeHospitalar } from './UnidadeMedica';
 import {geraCodigoNumerico} from '../config/database'
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { error } from 'console';
-import { stat } from 'fs';
 
 export class Adm extends Usuario {
     constructor(
@@ -206,13 +205,13 @@ export class Adm extends Usuario {
         }
     }
 
-    static async mostraRelatorioFinanceira (req: Request, res: Response) {
+    static async geraRelatorioFinanceira (res: Response) {
 
         async function  getHistoricoStatus (res: Response, status: string) {
 
             try {
                 const [rows] = await db.execute<RowDataPacket[]>(`
-                    SELECT * FROM ${tabela.movimentacaoFinanceira} WHERE = ?
+                    SELECT * FROM ${tabela.movimentacaoFinanceira} WHERE status_movimentacao = ?
                 `, [status])
                 
                 if (rows.length === 0) {
@@ -237,7 +236,7 @@ export class Adm extends Usuario {
 
                 const [rows] = await db.execute<RowDataPacket[]>(`
                 
-                    SELECT SUM(valor) AS total FROM ${tabela.movimentacaoFinanceira} WHERE status = ?`,
+                    SELECT SUM(valor) AS total FROM ${tabela.movimentacaoFinanceira} WHERE status_movimentacao = ?`,
                         [status])
 
                 if (rows.length ===0 ){
@@ -261,18 +260,18 @@ export class Adm extends Usuario {
 
             const relatorio = {
                 pendente: {
-                    itens: getHistoricoStatus(res, "pendente"),
-                    total: getValorTotalStatus(res, "pendente")
+                    itens: await getHistoricoStatus(res, "pendente"),
+                    total: await getValorTotalStatus(res, "pendente")
                 }, 
 
                 cancelado: {
-                    itens: getHistoricoStatus(res, "cancelado"),
-                    total: getValorTotalStatus(res, "cancelado")
+                    itens: await getHistoricoStatus(res, "cancelado"),
+                    total: await getValorTotalStatus(res, "cancelado")
                 },
 
                 pago: {
-                    itens: getHistoricoStatus(res, "pago"),
-                    total: getValorTotalStatus(res, "pago")
+                    itens: await getHistoricoStatus(res, "pago"),
+                    total: await getValorTotalStatus(res, "pago")
                 } 
             }
 

@@ -32,3 +32,7 @@ export const controllerReporEstoque = async (req: Request, res: Response) => {
 export const controllerMostraEstoque = async (req: Request, res: Response) => {
     Adm.mostraEstoque(req, res)
 }
+
+export const controllerGeraRelatorioFinanceiro = async (req: Request, res: Response) => {
+    Adm.geraRelatorioFinanceira(res)
+}
