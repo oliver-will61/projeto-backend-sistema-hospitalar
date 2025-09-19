@@ -288,4 +288,30 @@ export class Adm extends Usuario {
             })
         }
     }
+
+    static async geraRelatorioLeitos (req: Request, res: Response) {
+        try {
+            
+            const [resultLeitos] = await db.execute<RowDataPacket[]>(`
+                SELECT * from ${tabela.leitos}    
+            `)
+
+            if(resultLeitos.length === 0 ){
+                return res.status(400).json({
+                    mensagem: "Nenhum leito foi encontrado!"
+                })
+            }
+
+            
+
+        }
+
+        catch (error) {
+            console.error(error)
+
+            res.status(500).json({
+                mensagem: "Erro ao gerar o relatório"
+            })
+        }
+    }
 }

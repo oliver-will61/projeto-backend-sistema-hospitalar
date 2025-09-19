@@ -27,7 +27,7 @@ export const tabela = {
     consulta: "consultas",
     estoque: "estoque",
     movimentacaoFinanceira: "movimentacoes_financeiras",
-    leitor: "leitos",
+    leitos: "leitos",
     reserva_leitos: "reservas_leitos"
     
 } as const //garante a tipagem estatica
