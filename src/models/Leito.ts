@@ -3,21 +3,23 @@ import {db} from '../config/database';
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { error } from 'console';
 
-export class Leito {
+// export class Leito {
 
-    static async getLeitoDisponível (res: Response){
+//     static async getLeitoDisponível (res: Response){
         
-        try{
+//         try{
+            
+//             const []
 
-        }
+//         }
 
-        catch (error) {
-            console.error(error)
-            res.status(404).json({
-                mensagem: "Sem leitos disponíveis"
-            })
-        }
+//         catch (error) {
+//             console.error(error)
+//             res.status(404).json({
+//                 mensagem: "Sem leitos disponíveis"
+//             })
+//         }
 
-    } 
+//     } 
 
-} 
+// } 
