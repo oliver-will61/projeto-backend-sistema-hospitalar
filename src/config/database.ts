@@ -27,6 +27,7 @@ export const tabela = {
     consulta: "consultas",
     estoque: "estoque",
     movimentacaoFinanceira: "movimentacoes_financeiras"
+    
 } as const //garante a tipagem estatica
 
 //função para conveter BINARY16 para UUID string
