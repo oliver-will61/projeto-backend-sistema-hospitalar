@@ -291,10 +291,26 @@ export class Adm extends Usuario {
 
     static async geraRelatorioLeitos (req: Request, res: Response) {
         try {
+
+            const {unidadeMedica} = req.body 
             
             const [resultLeitos] = await db.execute<RowDataPacket[]>(`
-                SELECT * from ${tabela.leitos}    
-            `)
+                SELECT 
+                    tipo, 
+                    status,
+                    COUNT(*) as total
+                FROM ${tabela.leitos} WHERE  id_unidade_medica = ?
+                GROUP BY tipo, status
+                ORDEM BY tipo, status DESC; 
+            `, [unidadeMedica])
+
+            return res.status(200).json({
+                mensagem: "Relatorio de leito gerado",
+                data: {
+                    leitos: resultLeitos,
+                    movimentacoes_leito: "Em processo..."
+                }
+            })
 
             if(resultLeitos.length === 0 ){
                 return res.status(400).json({
