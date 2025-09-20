@@ -1,7 +1,7 @@
 import express from 'express'
 import {login, cadastroAdm, cadastroMedico, controllerCadastroUnidade, 
     controllerCadastraNovosItensEstoque, controllerReporEstoque, controllerMostraEstoque, 
-    controllerGeraRelatorioFinanceiro} from '../controllers/admController';
+    controllerGeraRelatorioFinanceiro, controllerGeraRelatorioLeito} from '../controllers/admController';
 import {verificaToken, isAdmin} from "../middleware"
 
 const router = express.Router();
@@ -72,5 +72,12 @@ router.get('/relatorio_financeiro',
     }
 )
 
+router.get('/relatorio_leitos',
+    verificaToken,
+    isAdmin,
+    (req, res, next) => {
+        controllerGeraRelatorioLeito(req, res).catch(next)
+    }
+)
 
 export default router

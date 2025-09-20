@@ -290,36 +290,89 @@ export class Adm extends Usuario {
     }
 
     static async geraRelatorioLeitos (req: Request, res: Response) {
+
+        // puxa as movimentações de leito com base no tipo de cada leito
+        async function getMovimentacoesPorTipoDeLeito(idUnidadeMedica: any, tipoLeito: string) {
+
+            try {
+                const [resultReservaLeitos] =  await db.execute<RowDataPacket[]>(`
+                    SELECT 
+                        rl.status_reserva,
+                        rl.motivo,
+                        rl.id_paciente, 
+                        rl.data_prevista_entrada,
+                        rl.status_reserva
+                    FROM ${tabela.reserva_leitos} rl
+
+                    INNER JOIN leitos l ON rl.id_leito = l.id
+                    WHERE l.id_unidade_hospitalar = ? AND l.tipo = ?
+
+                    ORDER BY rl.status_reserva`, 
+                        [idUnidadeMedica, tipoLeito]
+                )
+
+
+                if(resultReservaLeitos.length === 0) {
+                    return `Não foi encontrado nenhuma movimentação no leito de ${tipoLeito}`
+                }
+    
+                return resultReservaLeitos
+            }
+
+            catch (error) {
+                console.error(error)
+
+                return res.status(500).json({
+                    mensagem: "Erro ao puxar as movimentações"
+                })
+            }
+        }
+
+        async function getLeitoPorTipo(idUnidadeMedica: any, tipoLeito: string){
+            const [resultLeitos] = await db.execute<RowDataPacket[]>(`
+                SELECT 
+                    status,
+                    COUNT(*) as total
+                FROM ${tabela.leitos} WHERE  id_unidade_hospitalar = ? and tipo = ?
+                GROUP BY status
+                ORDER BY status ASC`,
+                    [idUnidadeMedica, tipoLeito])
+
+            if(resultLeitos.length === 0 ){
+                return res.status(404).json({
+                    mensagem: "tipo do leito ou unidade hospitalar não foi encontrada"
+                })
+            }  
+
+            return resultLeitos
+        }
+
         try {
 
             const {unidadeMedica} = req.body 
-            
-            const [resultLeitos] = await db.execute<RowDataPacket[]>(`
-                SELECT 
-                    tipo, 
-                    status,
-                    COUNT(*) as total
-                FROM ${tabela.leitos} WHERE  id_unidade_medica = ?
-                GROUP BY tipo, status
-                ORDEM BY tipo, status DESC; 
-            `, [unidadeMedica])
 
-            return res.status(200).json({
-                mensagem: "Relatorio de leito gerado",
-                data: {
-                    leitos: resultLeitos,
-                    movimentacoes_leito: "Em processo..."
+            const data = {
+                leitos: {
+                    enfermaria: await getLeitoPorTipo(unidadeMedica, "Enfermaria"),
+                    utiAdulto: await getLeitoPorTipo (unidadeMedica, "UTI Adulto"),
+                    utiPediatrica: await getLeitoPorTipo (unidadeMedica, "UTI Pediátrica"),
+                    isolamento: await getLeitoPorTipo (unidadeMedica, "Isolamento"),
+                    queimados: await getLeitoPorTipo (unidadeMedica, "Queimados")
+                },
+
+                movimentacoes_leitos: {
+                    enfermaria: await getMovimentacoesPorTipoDeLeito(unidadeMedica, "Enfermaria"),
+                    utiAdulto: await getMovimentacoesPorTipoDeLeito(unidadeMedica, "UTI Adulto"),
+                    utiPediatrica: await getMovimentacoesPorTipoDeLeito(unidadeMedica, "UTI Pediátrica"),
+                    isolamento: await getMovimentacoesPorTipoDeLeito(unidadeMedica, "Isolamento"),
+                    queimados: await getMovimentacoesPorTipoDeLeito(unidadeMedica, "Queimados"),
                 }
-            })
-
-            if(resultLeitos.length === 0 ){
-                return res.status(400).json({
-                    mensagem: "Nenhum leito foi encontrado!"
-                })
             }
-
             
-
+            return res.status(200).json({
+                mensagem: "Relatorio de leito gerado com sucesso!",
+                data: data
+            })
         }
 
         catch (error) {
