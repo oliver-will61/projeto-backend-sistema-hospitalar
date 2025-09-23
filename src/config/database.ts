@@ -14,6 +14,7 @@ export const db = mysql.createPool ({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
+    timezone: process.env.DB_TIMEZONE
 });
 
 // armazena os nome das tabelas do banco de dados em valores estáticos

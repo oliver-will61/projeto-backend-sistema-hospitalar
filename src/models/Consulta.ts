@@ -203,10 +203,10 @@ export class Consulta {
                 [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status, uuid]
             )
 
-            // reserva uma leito para a consulta
-            const [leito] = await db.execute(`
-                INSERT INTO ${tabela.leitos} ()
-            `) 
+            // // reserva uma leito para a consulta
+            // const [leito] = await db.execute(`
+            //     INSERT INTO ${tabela.leitos} ()
+            // `) 
 
             console.log("Consulta realizada com sucesso!");
             
