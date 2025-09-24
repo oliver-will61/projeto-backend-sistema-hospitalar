@@ -115,8 +115,8 @@ export class Prescricao {
                 
         const [resultado] = await db.execute(
             ` 
-            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,UUID_TO_BIN(?),?,?,?,?)`,
-            [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame, codigoPrescricao]
+            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,?,?,?,?)`,
+            [consultaId, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
 
         return res.json({
