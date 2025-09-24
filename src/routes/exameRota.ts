@@ -11,7 +11,7 @@ const app = express()
 app.use(express.json());
 
 // marcaExame
-router.post('/:codigoPrescricao',
+router.post('/paciente/:codigoPrescricao',
     verificaToken, isPaciente,
 
     (req, res, next) => {
