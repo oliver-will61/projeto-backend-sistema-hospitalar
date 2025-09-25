@@ -167,8 +167,7 @@ export class Consulta {
     static async marcarConsulta(req:Request, res: Response) {
 
         try {
-            const {emailPaciente, emailMedico, unidadeHospitalar, data, telemedicina, 
-                status} = req.body as ConsultaInput
+            const {emailPaciente, emailMedico, unidadeHospitalar, data, telemedicina} = req.body as ConsultaInput
             
             //pega o id do médico usadno como parametro o email
             const idMedico = await Usuario.getId(emailMedico, tabela.profissionais) 
@@ -179,11 +178,8 @@ export class Consulta {
             //pega o id unidade hospitalar usadno como parametro o nome da unidade
             const idUnidadeHospitalar = await UnidadeHospitalar.getId(unidadeHospitalar)
             
-            let statusVar = status
-            if (statusVar != "agendado") {
-                throw new Error ("Valor de status inesperado!")
-            }
-
+            const status = 'agendado';
+            
             // trás as consultas do paciente que tem como status "agendado"
             const [row] = await db.execute<RowDataPacket[]>(
                 `SELECT data, id_medico, status FROM ${tabela.consultas} WHERE id_medico = ? AND status = ? AND data = ?` ,
@@ -202,13 +198,6 @@ export class Consulta {
                 `INSERT INTO ${tabela.consultas} (id_paciente, id_medico, id_unidade_hospitalar, data, telemedicina, status, uuid) VALUES (?,?,?,?,?,?, UUID_TO_BIN(?))`,
                 [idPaciente, idMedico, idUnidadeHospitalar, data, telemedicina, status, uuid]
             )
-
-            // // reserva uma leito para a consulta
-            // const [leito] = await db.execute(`
-            //     INSERT INTO ${tabela.leitos} ()
-            // `) 
-
-            console.log("Consulta realizada com sucesso!");
             
             return res.status(201).json({
                 message: "Consulta Realizada com Sucesso!"
