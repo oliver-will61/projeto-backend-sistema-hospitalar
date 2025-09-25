@@ -95,10 +95,20 @@ export class Usuario {
         
             const {cpf, nome, email, senha, telefone, genero, idade} = req.body as Usuario
 
+            //verifica se o usuarop já possui cadastro
+
+            const [row] = await db.execute<RowDataPacket[]>(`
+                SELECT email FROM ${tabela.pacientes} WHERE email = ?`, 
+                    [email]
+            )
+
+            if (row.length > 0) {
+                return res.status(409).json({
+                    mensagem: "Usuário já cadastrado!"
+                })
+            }
+
             const senhaCriptografada = await bcrypt.hash(senha, 10);
-
-            console.log(JSON.stringify(req.body, null, 2));
-
 
             const [resultado] = await db.execute (
                 `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, idade) VALUES (?,?,?,?,?,?,?)`,
