@@ -237,6 +237,9 @@ export class Consulta {
 
         } catch (error) {
             console.error("Erro ao cancelar", error)
+            return res.status(500).json({
+                mensagem: "Erro ao realizar o cancelamento!"
+            })
         }
     }
 
@@ -281,6 +284,12 @@ export class Consulta {
                 if(codigo[0] == null) {
                     return res.status(404).json({
                         menssage: "Por favor escrever a prescrição do exame"
+                    })
+                }
+
+                if(codigo.length === 0){
+                    return res.status(404).json({
+                        mensagem: "UUID não encontrado"
                     })
                 }
             }

@@ -96,14 +96,14 @@ export class Prescricao {
 
         //verifica se a uuid da consulta existe
         if (consultaRow.length === 0) {
-                return res.json({
+                return res.status(404).json({
                 messagem: "Consulta não encontrada!"
             }) 
         }
 
         //verifica se a consulta já não foi atendida ou cancelada
         if (consultaRow[0].status != "agendado") {
-            return res.json({
+            return res.status(400).json({
                 messagem: "Consulta já realizada ou cancelada!"
             }) 
         }
@@ -119,7 +119,7 @@ export class Prescricao {
             [consultaId, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
 
-        return res.json({
+        return res.status(201).json({
             message: "Prescrição gerada com sucesso!",
             codigo: codigoPrescricao
         })
