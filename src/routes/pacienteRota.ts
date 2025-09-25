@@ -11,7 +11,7 @@ router.post('/cadastro', (req, res, next) => {
     cadastro(req, res).catch(next)
 });
 
-router.post('/login', (req, res, next) => {
+router.get('/login', (req, res, next) => {
     login(req, res).catch(next)
 });
 
