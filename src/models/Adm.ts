@@ -241,7 +241,7 @@ export class Adm extends Usuario {
 
                 if (rows.length ===0 ){
                     return res.status(404).json({
-                        mensagem: "status não encontrado, impossivel fazer a soma!"
+                        mensagem: "status não encontradode, impossivel fazer a soma!"
                     })
                 }
                 

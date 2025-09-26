@@ -9,7 +9,7 @@ const app = express()
 
 app.use(express.json());
 
-router.post('/login', (req, res, next) => {
+router.get('/login', (req, res, next) => {
     login(req, res).catch(next)
 });
 
@@ -64,7 +64,7 @@ router.get('/estoque',
     }
 )
 
-router.get('/relatorio_financeiro',
+router.get('/relatorioFinanceiro',
     verificaToken, 
     isAdmin,
     (req, res, next) => {
@@ -72,7 +72,7 @@ router.get('/relatorio_financeiro',
     }
 )
 
-router.get('/relatorio_leitos',
+router.get('/relatorioLeitos',
     verificaToken,
     isAdmin,
     (req, res, next) => {
