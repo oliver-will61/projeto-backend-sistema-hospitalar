@@ -87,8 +87,6 @@ export class Prescricao {
         const {diagnostico, receita, requisicao_exame} = req.body as PrescricaoInput 
         const  {uuidConsulta} = req.params
 
-
-
         const [consultaRow] = await db.execute<RowDataPacket[]>(
                 `SELECT id, status FROM ${nomeTabelaConsulta} WHERE uuid = UNHEX(REPLACE(?, '-', ''))`, 
                 [uuidConsulta]
@@ -115,8 +113,8 @@ export class Prescricao {
                 
         const [resultado] = await db.execute(
             ` 
-            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,?,?,?,?)`,
-            [consultaId, diagnostico, receita, requisicao_exame, codigoPrescricao]
+            INSERT INTO ${nomeTabelaPrescricao} (id_consulta, uuid_consulta, diagnostico, receita, autorizacao_exame, codigo) VALUE (?,UNHEX(REPLACE(?, '-', '')),?,?,?,?)`,
+            [consultaId, uuidConsulta, diagnostico, receita, requisicao_exame, codigoPrescricao]
         ) 
 
         return res.status(201).json({

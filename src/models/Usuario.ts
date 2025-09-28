@@ -6,6 +6,7 @@ import { RowDataPacket } from "mysql2";
 import { Consulta } from './Consulta';
 import { Exame } from './Exame';
 import { error } from 'console';
+import { UsuarioInput } from '../interfaces/UsuarioInput';
 
 export class Usuario {
 
@@ -93,7 +94,7 @@ export class Usuario {
         try {
 
         
-            const {cpf, nome, email, senha, telefone, genero, idade} = req.body as Usuario
+            const {cpf, nome, email, senha, telefone, genero, dataDeNacimento} = req.body as UsuarioInput
 
             //verifica se o usuarop já possui cadastro
 
@@ -111,8 +112,8 @@ export class Usuario {
             const senhaCriptografada = await bcrypt.hash(senha, 10);
 
             const [resultado] = await db.execute (
-                `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, idade) VALUES (?,?,?,?,?,?,?)`,
-                [cpf,nome,email,senhaCriptografada,telefone,genero,idade]
+                `INSERT INTO ${nomeTabela} (cpf, nome, email, senha, telefone, genero, data_nascimento) VALUES (?,?,?,?,?,?,?)`,
+                [cpf,nome,email,senhaCriptografada,telefone,genero,dataDeNacimento]
             )
             
             console.log("Paciente cadastrado com sucesso!"); //resposta de sucesso (backend)

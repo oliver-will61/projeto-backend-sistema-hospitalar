@@ -200,13 +200,14 @@ export class Consulta {
             )
             
             return res.status(201).json({
-                message: "Consulta Realizada com Sucesso!"
+                mensagem: "Consulta marcada com sucesso!",
+                uuid: uuid
             });
 
         } catch (error){
             console.error(error)
             return res.json({
-                message: "Erro ao marca a consulta, verificar o servidor"
+                mensagem: "Erro ao marca a consulta, verificar o servidor"
             })
         }
     }

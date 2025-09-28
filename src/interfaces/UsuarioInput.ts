@@ -5,5 +5,5 @@ export interface UsuarioInput {
         senha: string;
         telefone: string;
         genero: string;
-        idade: Number; 
+        dataDeNacimento: Date; 
 }
