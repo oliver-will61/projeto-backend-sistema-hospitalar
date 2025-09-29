@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import { RowDataPacket } from "mysql2";
 import { Consulta } from './Consulta';
 import { Exame } from './Exame';
-import { error } from 'console';
 import { UsuarioInput } from '../interfaces/UsuarioInput';
 
 export class Usuario {
@@ -116,10 +115,9 @@ export class Usuario {
                 [cpf,nome,email,senhaCriptografada,telefone,genero,dataDeNacimento]
             )
             
-            console.log("Paciente cadastrado com sucesso!"); //resposta de sucesso (backend)
 
             return res.status(201).json({
-                message: 'Paciente cadastrado com sucesso!', //resposta de sucesso (frontend)
+                message: 'Usuario cadastrado com sucesso!', //resposta de sucesso (frontend)
             });  
         
         } catch (error) {
